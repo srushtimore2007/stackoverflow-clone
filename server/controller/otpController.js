@@ -2,6 +2,7 @@
 
 import otpUtils from '../utils/otpStore.js';
 import nodemailer from 'nodemailer';
+import vonageService from '../lib/vonage.js';
 
 // Initialize nodemailer
 const transporter = nodemailer.createTransport({
@@ -67,14 +68,40 @@ export const sendOTP = async (req, res) => {
     }
 
     if (type === 'phone') {
-      console.log(`📱 Phone OTP generated: ${otp}`);
+      // Validate and format phone number
+      if (!vonageService.validatePhoneNumber(value)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid phone number format'
+        });
+      }
 
-      return res.json({
-        success: true,
-        message: 'OTP generated successfully',
-        otp: otp,
-        type: 'phone'
-      });
+      const formattedPhone = vonageService.formatPhoneNumber(value);
+      
+      // Send OTP via Vonage
+      const smsResult = await vonageService.sendOTP(formattedPhone, otp);
+      
+      if (smsResult.success) {
+        console.log(`📱 SMS OTP sent to ${formattedPhone}: ${otp}`);
+        
+        return res.json({
+          success: true,
+          message: 'OTP sent to phone number',
+          type: 'phone',
+          messageId: smsResult.messageId
+        });
+      } else {
+        // If SMS fails, fallback to simulation for development
+        console.log(`⚠️ Vonage SMS failed, simulating OTP: ${otp}`);
+        
+        return res.json({
+          success: true,
+          message: 'OTP generated successfully (simulation mode)',
+          otp: otp, // Only for development/testing
+          type: 'phone',
+          simulation: true
+        });
+      }
     }
 
   } catch (error) {

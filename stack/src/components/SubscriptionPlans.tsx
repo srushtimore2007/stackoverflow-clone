@@ -10,11 +10,20 @@ import {
   mockActivateSubscription,
   immediateUpgradeSubscription,
 } from '../services/subscriptionService';
+import RazorpayPayment from './RazorpayPayment';
 
 const SubscriptionPlans: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [currentPlan, setCurrentPlan] = useState<PlanType>('FREE');
+  const [razorpayPayment, setRazorpayPayment] = useState<{
+    orderId: string;
+    amount: number;
+    currency: string;
+    planName: string;
+    keyId: string;
+    subscriptionId: string;
+  } | null>(null);
 
   const plans: Plan[] = [
     {
@@ -63,53 +72,76 @@ const SubscriptionPlans: React.FC = () => {
   };
 
   /**
-   * Check if current time is within payment window (TEMPORARILY DISABLED FOR TESTING)
-   * Originally: 10 AM - 11 AM IST restriction
-   * Now: Always returns true for testing email and invoice flow
+   * Check if current time is within payment window (10:00 AM - 11:00 AM IST)
    */
   const isWithinPaymentWindow = (): boolean => {
-    // TEMPORARY BYPASS: Always allow payments for testing
-    // This bypasses the 10 AM - 11 AM IST time restriction
-    // TODO: Re-enable time restriction after testing is complete
-    return true;
+    // Get current time in IST (UTC+5:30)
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+    const istTime = new Date(now.getTime() + istOffset);
+    
+    // Get IST time components
+    const istHour = istTime.getUTCHours(); // IST hour in UTC format
+    const istMinute = istTime.getUTCMinutes();
+    
+    // Check if current time is within payment window (10:00 AM - 11:00 AM IST)
+    // In IST: 10:00 AM = 4:30 UTC, 11:00 AM = 5:30 UTC
+    const isWithinWindow = istHour === 10 && istMinute >= 0 && istMinute < 60;
+    
+    console.log('💳 Payment window check:', {
+      utcTime: now.toISOString(),
+      istTime: istTime.toISOString(),
+      istHour,
+      istMinute,
+      isWithinWindow,
+      timeWindow: '10:00 AM - 11:00 AM IST'
+    });
+    
+    return isWithinWindow;
   };
 
   const handleSubscribe = async (planId: PlanType): Promise<void> => {
-    // IMMEDIATE UPGRADE: No payment required, no restrictions
-    // Upgrades plan immediately and sends confirmation email
+    if (planId === 'FREE') {
+      toast.info('Free plan requires no payment!');
+      return;
+    }
+
+    if (planId === currentPlan) {
+      toast.info('You are already on this plan!');
+      return;
+    }
+
+    // Check if current time is within payment window (10:00 AM - 11:00 AM IST)
+    if (!isWithinPaymentWindow()) {
+      toast.error('Payments are allowed only between 10:00 AM and 11:00 AM IST.');
+      return;
+    }
 
     setLoading(true);
     setError('');
 
     try {
-      // Use immediate upgrade for instant plan change
-      const upgradeResponse = await immediateUpgradeSubscription(planId);
+      // Create Razorpay order
+      const orderResponse = await createSubscriptionOrder(planId);
 
-      if (upgradeResponse.success) {
-        toast.success(`Plan upgraded successfully to ${upgradeResponse.newPlan}! Check your email for confirmation and invoice.`);
-        setCurrentPlan(planId);
-        fetchCurrentSubscription();
+      if (orderResponse.success) {
+        // Set up Razorpay payment
+        setRazorpayPayment({
+          orderId: orderResponse.order.id,
+          amount: orderResponse.order.amount,
+          currency: orderResponse.order.currency,
+          planName: plans.find(p => p.id === planId)?.name || planId,
+          keyId: orderResponse.order.razorpayKeyId,
+          subscriptionId: orderResponse.subscriptionId,
+        });
       } else {
         // Check if this is an upgrade restriction response
-        if (upgradeResponse.canUpgradeOn) {
-          const upgradeDate = new Date(upgradeResponse.canUpgradeOn);
-          const formattedDate = upgradeDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          });
-          toast.error(`Cannot upgrade now. Your current plan is active until ${formattedDate}.`);
-        } else {
-          // Check if this is a payment time restriction
-          if (upgradeResponse.message && upgradeResponse.message.includes('Payments are allowed only between')) {
-            toast.error('Payments are allowed only between 10:00 AM and 11:00 AM IST.');
-          } else {
-            throw new Error(upgradeResponse.message);
-          }
+        if (orderResponse.message && orderResponse.message.includes('Cannot upgrade now')) {
+          throw new Error(orderResponse.message);
         }
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to upgrade subscription';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create payment order';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -117,11 +149,49 @@ const SubscriptionPlans: React.FC = () => {
     }
   };
 
+  const handlePaymentSuccess = async (paymentData: any): Promise<void> => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Verify payment and activate subscription
+      const verifyResponse = await verifyPayment(paymentData);
+
+      if (verifyResponse.success) {
+        toast.success(`Payment successful! Plan upgraded to ${verifyResponse.subscription.plan}. Check your email for confirmation.`);
+        setCurrentPlan(verifyResponse.subscription.plan);
+        fetchCurrentSubscription();
+      } else {
+        throw new Error(verifyResponse.message);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Payment verification failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+      setRazorpayPayment(null);
+    }
+  };
+
+  const handlePaymentError = (error: any): void => {
+    setError(error.message);
+    toast.error(error.message);
+    setRazorpayPayment(null);
+    setLoading(false);
+  };
+
+  const handlePaymentClose = (): void => {
+    setRazorpayPayment(null);
+    setLoading(false);
+  };
+
   const handleMockSubscribe = async (planId: PlanType): Promise<void> => {
-    // TEMPORARY BYPASS: Allow subscribing to any plan including current plan
-    // Originally prevented subscribing to current plan
-    // Now allows re-subscribing to same plan for testing
-    // TODO: Re-enable restriction after testing is complete
+    // Check if current time is within payment window (10:00 AM - 11:00 AM IST)
+    if (!isWithinPaymentWindow()) {
+      toast.error('Payments are allowed only between 10:00 AM and 11:00 AM IST.');
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -131,19 +201,13 @@ const SubscriptionPlans: React.FC = () => {
 
       if (mockResponse.success) {
         toast.success(`Subscription activated successfully (mock mode)! Plan: ${mockResponse.subscription.plan}`);
-        setCurrentPlan(planId);
-        fetchCurrentSubscription();
+        setCurrentPlan(mockResponse.subscription.plan);
       } else {
-        // Check if this is a payment time restriction
-        if (mockResponse.message && mockResponse.message.includes('Payments are allowed only between')) {
-          toast.error('Payments are allowed only between 10:00 AM and 11:00 AM IST.');
-        } else {
-          throw new Error(mockResponse.message);
-        }
+        throw new Error(mockResponse.message);
       }
     } catch (err) {
+      setError('');
       const errorMessage = err instanceof Error ? err.message : 'Failed to activate subscription';
-      setError(errorMessage);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -173,11 +237,23 @@ const SubscriptionPlans: React.FC = () => {
 
             <button
               onClick={() => handleSubscribe(plan.id)}
-              disabled={loading}
+              disabled={loading || !isWithinPaymentWindow()}
               className={currentPlan === plan.id ? 'current-plan' : ''}
             >
-              {loading ? 'Processing...' : 'Upgrade Plan'}
+              {loading ? 'Processing...' : !isWithinPaymentWindow() ? 'Payment Window Closed' : 'Upgrade Plan'}
             </button>
+
+            {/* Payment window status indicator */}
+            {plan.id !== 'FREE' && (
+              <div style={{ 
+                marginTop: '0.5rem', 
+                fontSize: '0.8rem', 
+                color: isWithinPaymentWindow() ? '#28a745' : '#dc3545',
+                textAlign: 'center'
+              }}>
+                {isWithinPaymentWindow() ? '💳 Payment Window Open (10:00 AM - 11:00 AM IST)' : '⏰ Payment Window Closed'}
+              </div>
+            )}
 
             {/* Upgrade indicator - shows when user is on current plan */}
             {currentPlan === plan.id && (
@@ -188,6 +264,21 @@ const SubscriptionPlans: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Razorpay Payment Modal */}
+      {razorpayPayment && (
+        <RazorpayPayment
+          orderId={razorpayPayment.orderId}
+          amount={razorpayPayment.amount}
+          currency={razorpayPayment.currency}
+          planName={razorpayPayment.planName}
+          keyId={razorpayPayment.keyId}
+          subscriptionId={razorpayPayment.subscriptionId}
+          onSuccess={handlePaymentSuccess}
+          onError={handlePaymentError}
+          onClose={handlePaymentClose}
+        />
+      )}
 
       <style jsx>{`
         .subscription-plans {

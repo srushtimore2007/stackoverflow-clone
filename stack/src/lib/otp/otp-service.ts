@@ -2,7 +2,7 @@
 
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
-import axios from 'axios';
+import { Vonage } from '@vonage/server-sdk';
 
 // OTP store in-memory (for production, use DB or Redis)
 interface OTPEntry {
@@ -126,64 +126,62 @@ class OTPServiceClass {
     }
   }
 
-  // Send OTP via SMS using RapidAPI
-  async sendSMSOTP(phoneNumber: string, otp: string): Promise<boolean> {
+  // Send OTP via SMS using Vonage/Nexmo
+  async sendVonageSMSOTP(phoneNumber: string, otp: string): Promise<any> {
     try {
-      const rapidApiKey = process.env.RAPIDAPI_KEY;
-      const rapidApiHost = process.env.RAPIDAPI_HOST;
+      const vonageApiKey = process.env.VONAGE_API_KEY;
+      const vonageApiSecret = process.env.VONAGE_API_SECRET;
 
-      if (!rapidApiKey || !rapidApiHost) {
-        console.error('RapidAPI credentials not configured in environment variables');
-        console.error('Required: RAPIDAPI_KEY and RAPIDAPI_HOST in .env.local');
-        throw new Error('SMS service not configured. Please contact administrator.');
+      if (!vonageApiKey || !vonageApiSecret) {
+        console.error('Vonage credentials not configured in environment variables');
+        console.error('Required: VONAGE_API_KEY and VONAGE_API_SECRET in .env.local');
+        throw new Error('Vonage SMS service not configured. Please contact administrator.');
       }
 
-      // Format phone number for Indian numbers (ensure it starts with +91)
+      const vonage = new Vonage({
+        apiKey: vonageApiKey,
+        apiSecret: vonageApiSecret
+      });
+
+      // Format phone number for Vonage (ensure it starts with +)
       let formattedPhone = phoneNumber;
-      if (phoneNumber.startsWith('0') && phoneNumber.length === 11) {
-        formattedPhone = '+91' + phoneNumber.substring(1);
-      } else if (phoneNumber.startsWith('91') && phoneNumber.length === 12) {
-        formattedPhone = '+' + phoneNumber;
-      } else if (!phoneNumber.startsWith('+')) {
-        formattedPhone = '+91' + phoneNumber;
-      }
-
-      const message = `Your verification code is ${otp}. Valid for ${this.otpExpiryMinutes} minutes. Do not share this code.`;
-
-      const options = {
-        method: 'POST',
-        url: `https://${rapidApiHost}/sms/send`,
-        headers: {
-          'content-type': 'application/json',
-          'X-RapidAPI-Key': rapidApiKey,
-          'X-RapidAPI-Host': rapidApiHost
-        },
-        data: {
-          to: formattedPhone,
-          message: message,
-          type: 'OTP'
-        }
-      };
-
-      console.log(`Sending SMS to ${formattedPhone} via RapidAPI`);
-      const response = await axios.request(options);
-      console.log(`SMS OTP sent successfully to ${formattedPhone}`);
-      return true;
-    } catch (error) {
-      console.error('Error sending SMS OTP:', error);
-      
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          console.error('API Error Response:', error.response.data);
-          console.error('API Status:', error.response.status);
-        } else if (error.request) {
-          console.error('No response received from RapidAPI');
+      if (!phoneNumber.startsWith('+')) {
+        if (phoneNumber.startsWith('0') && phoneNumber.length === 11) {
+          formattedPhone = '+91' + phoneNumber.substring(1);
+        } else if (phoneNumber.startsWith('91') && phoneNumber.length === 12) {
+          formattedPhone = '+' + phoneNumber;
         } else {
-          console.error('Request setup error:', error.message);
+          formattedPhone = '+91' + phoneNumber;
         }
       }
+
+      const brandName = process.env.VONAGE_BRAND_NAME || 'CodeQuest';
+      const message = `Your OTP for phone verification before switching language is: ${otp}`;
+
+      console.log(`Sending SMS to ${formattedPhone} via Vonage from ${brandName}`);
+      const response = await vonage.sms.send({
+        to: formattedPhone,
+        from: brandName,
+        text: message
+      });
       
-      throw error; // Re-throw to handle in API route
+      console.log(`SMS OTP sent successfully to ${formattedPhone} via Vonage`);
+      return response;
+    } catch (error) {
+      // Log full error and OTP for debugging when SMS fails
+      console.error('=== SMS SENDING FAILED ===');
+      console.error('Full Error Details:', error);
+      console.error('Failed Phone Number:', phoneNumber);
+      console.error('Failed OTP:', otp);
+      console.error('Error Type:', error instanceof Error ? error.constructor.name : typeof error);
+      if (error instanceof Error) {
+        console.error('Error Message:', error.message);
+        console.error('Error Stack:', error.stack);
+      }
+      console.error('=== END ERROR DETAILS ===');
+      
+      // Re-throw the error to be handled by the API route
+      throw error;
     }
   }
 

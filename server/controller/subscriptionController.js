@@ -113,16 +113,24 @@ export const createSubscriptionOrder = async (req, res) => {
     // Get plan details
     let planDetails;
     try {
+      console.log('🔍 Looking up plan:', normalizedPlan);
+      console.log('🔍 Available plans:', Object.keys(SUBSCRIPTION_PLANS));
+      
       planDetails = SUBSCRIPTION_PLANS[normalizedPlan];
       if (!planDetails) {
         throw new Error(`Plan configuration not found for: ${normalizedPlan}`);
       }
+      
+      console.log('✅ Plan found:', { 
+        plan: normalizedPlan, 
+        price: planDetails.price, 
+        currency: planDetails.currency 
+      });
     } catch (planError) {
       console.error('❌ Plan configuration error:', planError);
-      return res.status(500).json({
+      return res.status(400).json({
         success: false,
-        message: "Plan configuration error"
-        // Note: Don't send raw error to client for security
+        message: `Invalid subscription plan: ${normalizedPlan}. Available plans: ${Object.keys(SUBSCRIPTION_PLANS).join(', ')}`
       });
     }
 
@@ -135,8 +143,8 @@ export const createSubscriptionOrder = async (req, res) => {
       });
     }
 
-    const receipt = `receipt_${userId}_${Date.now()}`;
-
+    // const receipt = `receipt_${userId}_${Date.now()}`;
+const receipt = `sub_${normalizedPlan}_${Date.now()}`.slice(0, 40);
     // Create Razorpay order with comprehensive error handling
     let order;
     try {
@@ -145,25 +153,56 @@ export const createSubscriptionOrder = async (req, res) => {
         throw new Error('Payment gateway function not available');
       }
 
-      order = await createOrder(planDetails.price, planDetails.currency, receipt);
+      // Validate amount is in correct format (should already be in paise)
+      const amount = planDetails.price;
+      if (typeof amount !== 'number' || amount <= 0) {
+        throw new Error(`Invalid amount: ${amount}. Must be a positive number in paise.`);
+      }
+
+      console.log('🚀 Creating Razorpay order:', {
+        plan: normalizedPlan,
+        amount: amount,
+        currency: planDetails.currency,
+        receipt: receipt
+      });
+
+      order = await createOrder(amount, planDetails.currency, receipt);
       
       // Validate order response structure
       if (!order || !order.id || !order.amount || !order.currency) {
+        console.error('❌ Invalid Razorpay response:', order);
         throw new Error('Invalid payment gateway response');
       }
       
-      console.log('✅ Razorpay order created:', { orderId: order.id, amount: order.amount });
+      console.log('✅ Razorpay order created successfully:', { 
+        orderId: order.id, 
+        amount: order.amount,
+        currency: order.currency,
+        receipt: order.receipt
+      });
     } catch (razorpayError) {
       console.error('❌ Razorpay order creation failed:', {
         error: razorpayError.message,
         stack: razorpayError.stack,
         plan: normalizedPlan,
-        amount: planDetails.price
+        amount: planDetails.price,
+        currency: planDetails.currency
       });
+      
+      // Return more specific error messages for common issues
+      let errorMessage = "Failed to create payment order";
+      if (razorpayError.message.includes('credentials')) {
+        errorMessage = "Payment gateway credentials not configured";
+      } else if (razorpayError.message.includes('ENOTFOUND')) {
+        errorMessage = "Unable to connect to payment gateway";
+      } else if (razorpayError.message.includes('Invalid amount')) {
+        errorMessage = "Invalid payment amount";
+      }
+      
       return res.status(500).json({
         success: false,
-        message: "Failed to create payment order"
-        // Note: Don't send raw error to client for security
+        message: errorMessage,
+        debug: process.env.NODE_ENV === 'development' ? razorpayError.message : undefined
       });
     }
 
@@ -174,6 +213,14 @@ export const createSubscriptionOrder = async (req, res) => {
       if (!order.id || !userId || !normalizedPlan) {
         throw new Error('Missing required fields for subscription creation');
       }
+
+      console.log('💾 Creating subscription record:', {
+        userId,
+        plan: normalizedPlan,
+        amount: planDetails.price,
+        currency: planDetails.currency,
+        razorpayOrderId: order.id
+      });
 
       subscription = new Subscription({
         userId,
@@ -191,18 +238,34 @@ export const createSubscriptionOrder = async (req, res) => {
         throw new Error('Subscription record was not saved properly');
       }
       
-      console.log('✅ Subscription record created:', { subscriptionId: subscription._id });
+      console.log('✅ Subscription record created successfully:', { 
+        subscriptionId: subscription._id,
+        plan: normalizedPlan,
+        amount: planDetails.price
+      });
     } catch (subscriptionError) {
       console.error('❌ Subscription record creation failed:', {
         error: subscriptionError.message,
         stack: subscriptionError.stack,
         userId,
-        plan: normalizedPlan
+        plan: normalizedPlan,
+        orderId: order?.id
       });
+      
+      // Return more specific database error messages
+      let errorMessage = "Failed to create subscription record";
+      if (subscriptionError.message.includes('duplicate key')) {
+        errorMessage = "Duplicate subscription record";
+      } else if (subscriptionError.message.includes('validation')) {
+        errorMessage = "Invalid subscription data";
+      } else if (subscriptionError.message.includes('connection')) {
+        errorMessage = "Database connection error";
+      }
+      
       return res.status(500).json({
         success: false,
-        message: "Failed to create subscription record"
-        // Note: Don't send raw error to client for security
+        message: errorMessage,
+        debug: process.env.NODE_ENV === 'development' ? subscriptionError.message : undefined
       });
     }
 
@@ -219,11 +282,13 @@ export const createSubscriptionOrder = async (req, res) => {
       subscriptionId: subscription._id,
     };
 
-    console.log('✅ Order creation successful:', { 
+    console.log('🎉 Order creation completed successfully:', { 
       orderId: order.id, 
       subscriptionId: subscription._id,
       plan: normalizedPlan,
-      userId 
+      userId,
+      amount: order.amount,
+      currency: order.currency
     });
 
     return res.status(200).json(responseData);
@@ -239,8 +304,8 @@ export const createSubscriptionOrder = async (req, res) => {
     
     return res.status(500).json({ 
       success: false, 
-      message: "Failed to create order"
-      // Note: Don't send raw error to client for security
+      message: "Internal server error while creating order",
+      debug: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
