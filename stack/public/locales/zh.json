@@ -1,0 +1,79 @@
+{
+  "common": {
+    "login": "登录",
+    "signup": "注册",
+    "logout": "登出",
+    "submit": "提交",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "welcome": "欢迎来到我们的平台",
+    "home": "首页",
+    "profile": "个人资料",
+    "settings": "设置"
+  },
+  "auth": {
+    "email": "邮箱",
+    "password": "密码",
+    "confirm_password": "确认密码",
+    "forgot_password": "忘记密码？",
+    "remember_me": "记住我",
+    "already_have_account": "已有账户？",
+    "dont_have_account": "没有账户？",
+    "login_success": "登录成功",
+    "signup_success": "账户创建成功",
+    "invalid_credentials": "邮箱或密码无效",
+    "password_mismatch": "密码不匹配",
+    "login_to_account": "登录您的账户",
+    "enter_email_password_continue": "输入您的邮箱和密码以继续",
+    "otp_required_for_login": "登录需要OTP",
+    "create_account": "创建您的账户",
+    "join_community": "加入 Stack Overflow 社区",
+    "signup_with_google": "使用 Google 注册",
+    "signup_with_github": "使用 GitHub 注册",
+    "or_continue_with": "或继续使用",
+    "display_name": "显示名称",
+    "enter_display_name": "输入您的显示名称",
+    "password_min_length": "密码必须至少8个字符。",
+    "agree_terms_privacy": "我同意条款和隐私政策"
+  },
+  "questions": {
+    "ask_question": "提问",
+    "question_title": "问题标题",
+    "question_body": "问题内容",
+    "tags": "标签",
+    "post_question": "发布问题",
+    "no_questions": "未找到问题",
+    "view_question": "查看问题",
+    "answers_count": "回答",
+    "votes_count": "投票",
+    "views_count": "浏览"
+  },
+  "answers": {
+    "answer": "回答",
+    "your_answer": "你的回答",
+    "post_answer": "发布回答",
+    "no_answers": "暂无回答",
+    "accept_answer": "接受回答",
+    "accepted": "已接受"
+  },
+  "navigation": {
+    "dashboard": "仪表板",
+    "questions": "问题",
+    "users": "用户",
+    "notifications": "通知",
+    "help": "帮助"
+  },
+  "messages": {
+    "network_error": "网络错误。请检查您的连接。",
+    "something_went_wrong": "出现错误。请重试。",
+    "operation_successful": "操作成功完成",
+    "confirm_delete": "确定要删除此项目吗？",
+    "all_fields_required": "所有字段都是必填项"
+  }
+}

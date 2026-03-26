@@ -1,0 +1,28 @@
+{
+  "welcome": "Bem-vindo",
+  "logout": "Sair",
+  "submit": "Enviar",
+  "cancel": "Cancelar",
+  "loading": "Carregando...",
+  "confirm": "Confirmar",
+  "close": "Fechar",
+  "retry": "Tentar novamente",
+  "languageSwitcher": {
+    "title": "Selecionar idioma",
+    "currentLanguage": "Idioma atual"
+  },
+  "otp": {
+    "title": "Verificar OTP",
+    "emailMessage": "Um OTP foi enviado para seu endereço de e-mail",
+    "mobileMessage": "Um OTP foi enviado para seu número de celular",
+    "enterOTP": "Digite o OTP",
+    "verify": "Verificar",
+    "resend": "Reenviar OTP",
+    "expiresIn": "Expira em {{time}} segundos",
+    "attemptsRemaining": "{{count}} tentativas restantes"
+  },
+  "messages": {
+    "languageChanged": "Idioma alterado com sucesso",
+    "verificationRequired": "Verificação necessária para alterar idioma"
+  }
+}

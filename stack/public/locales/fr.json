@@ -1,0 +1,79 @@
+{
+  "common": {
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "logout": "Déconnexion",
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "search": "Rechercher",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "welcome": "Bienvenue sur notre plateforme",
+    "home": "Accueil",
+    "profile": "Profil",
+    "settings": "Paramètres"
+  },
+  "auth": {
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "forgot_password": "Mot de passe oublié?",
+    "remember_me": "Se souvenir de moi",
+    "already_have_account": "Vous avez déjà un compte?",
+    "dont_have_account": "Vous n'avez pas de compte?",
+    "login_success": "Connexion réussie",
+    "signup_success": "Compte créé avec succès",
+    "invalid_credentials": "E-mail ou mot de passe invalide",
+    "password_mismatch": "Les mots de passe ne correspondent pas",
+    "login_to_account": "Connectez-vous à votre compte",
+    "enter_email_password_continue": "Entrez votre e-mail et mot de passe pour continuer",
+    "otp_required_for_login": "OTP requis pour la connexion",
+    "create_account": "Créez votre compte",
+    "join_community": "Rejoignez la communauté Stack Overflow",
+    "signup_with_google": "Inscrivez-vous avec Google",
+    "signup_with_github": "Inscrivez-vous avec GitHub",
+    "or_continue_with": "Ou continuer avec",
+    "display_name": "Nom d'affichage",
+    "enter_display_name": "Entrez votre nom d'affichage",
+    "password_min_length": "Le mot de passe doit contenir au moins 8 caractères.",
+    "agree_terms_privacy": "J'accepte les Termes et Politique de Confidentialité"
+  },
+  "questions": {
+    "ask_question": "Poser une Question",
+    "question_title": "Titre de la Question",
+    "question_body": "Corps de la Question",
+    "tags": "Étiquettes",
+    "post_question": "Publier la Question",
+    "no_questions": "Aucune question trouvée",
+    "view_question": "Voir la Question",
+    "answers_count": "Réponses",
+    "votes_count": "Votes",
+    "views_count": "Vues"
+  },
+  "answers": {
+    "answer": "Réponse",
+    "your_answer": "Votre Réponse",
+    "post_answer": "Publier la Réponse",
+    "no_answers": "Aucune réponse pour le moment",
+    "accept_answer": "Accepter la Réponse",
+    "accepted": "Accepté"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "questions": "Questions",
+    "users": "Utilisateurs",
+    "notifications": "Notifications",
+    "help": "Aide"
+  },
+  "messages": {
+    "network_error": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "something_went_wrong": "Quelque chose s'est mal passé. Veuillez réessayer.",
+    "operation_successful": "Opération terminée avec succès",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer cet élément?",
+    "all_fields_required": "Tous les champs sont obligatoires"
+  }
+}

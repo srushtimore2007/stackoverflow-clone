@@ -1,0 +1,79 @@
+{
+  "common": {
+    "login": "लॉग इन",
+    "signup": "साइन अप",
+    "logout": "लॉग आउट",
+    "submit": "जमा करें",
+    "cancel": "रद्द करें",
+    "save": "सेव करें",
+    "delete": "हटाएं",
+    "edit": "एडिट करें",
+    "search": "खोजें",
+    "loading": "लोड हो रहा है...",
+    "error": "गलती",
+    "success": "सफलता",
+    "welcome": "हमारे प्लेटफॉर्म पर आपका स्वागत है",
+    "home": "होम",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्स"
+  },
+  "auth": {
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirm_password": "पासवर्ड की पुष्टि करें",
+    "forgot_password": "पासवर्ड भूल गए?",
+    "remember_me": "मुझे याद रखें",
+    "already_have_account": "पहले से ही खाता है?",
+    "dont_have_account": "खाता नहीं है?",
+    "login_success": "लॉग इन सफल",
+    "signup_success": "खाता सफलतापूर्वक बनाया गया",
+    "invalid_credentials": "अमान्य ईमेल या पासवर्ड",
+    "password_mismatch": "पासवर्ड मेल नहीं खा रहे",
+    "login_to_account": "अपने खाते में लॉग इन करें",
+    "enter_email_password_continue": "जारी रखने के लिए अपना ईमेल और पासवर्ड दर्ज करें",
+    "otp_required_for_login": "लॉग इन के लिए OTP आवश्यक",
+    "create_account": "अपना खाता बनाएं",
+    "join_community": "Stack Overflow कम्युनिटी में शामिल हों",
+    "signup_with_google": "Google के साथ साइन अप करें",
+    "signup_with_github": "GitHub के साथ साइन अप करें",
+    "or_continue_with": "या इसके साथ जारी रखें",
+    "display_name": "प्रदर्शन नाम",
+    "enter_display_name": "अपना प्रदर्शन नाम दर्ज करें",
+    "password_min_length": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "agree_terms_privacy": "मैं नियम और गोपनीयता नीति से सहमत हूं"
+  },
+  "questions": {
+    "ask_question": "प्रश्न पूछें",
+    "question_title": "प्रश्न शीर्षक",
+    "question_body": "प्रश्न बॉडी",
+    "tags": "टैग",
+    "post_question": "प्रश्न पोस्ट करें",
+    "no_questions": "कोई प्रश्न नहीं मिला",
+    "view_question": "प्रश्न देखें",
+    "answers_count": "उत्तर",
+    "votes_count": "वोट",
+    "views_count": "देखे गए"
+  },
+  "answers": {
+    "answer": "उत्तर",
+    "your_answer": "आपका उत्तर",
+    "post_answer": "उत्तर पोस्ट करें",
+    "no_answers": "अभी तक कोई उत्तर नहीं",
+    "accept_answer": "उत्तर स्वीकार करें",
+    "accepted": "स्वीकार किया गया"
+  },
+  "navigation": {
+    "dashboard": "डैशबोर्ड",
+    "questions": "प्रश्न",
+    "users": "उपयोगकर्ता",
+    "notifications": "सूचनाएं",
+    "help": "सहायता"
+  },
+  "messages": {
+    "network_error": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।",
+    "something_went_wrong": "कुछ गलत हो गया। कृपया फिर से कोशिश करें।",
+    "operation_successful": "ऑपरेशन सफलतापूर्वक पूर्ण हुआ",
+    "confirm_delete": "क्या आप वाकई इस आइटम को हटाना चाहते हैं?",
+    "all_fields_required": "सभी फ़ील्ड आवश्यक हैं"
+  }
+}

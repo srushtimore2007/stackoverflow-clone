@@ -1,0 +1,9 @@
+{
+  "invalidOTP": "OTP无效。请重试。",
+  "expiredOTP": "OTP已过期。请请求新的OTP。",
+  "maxAttemptsReached": "已达到最大尝试次数。请稍后再试。",
+  "networkError": "网络错误。请检查您的连接。",
+  "otpSendFailed": "发送OTP失败。请重试。",
+  "verificationFailed": "验证失败。请重试。",
+  "unknownError": "发生未知错误。请重试。"
+}

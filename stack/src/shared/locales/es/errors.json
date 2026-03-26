@@ -1,0 +1,9 @@
+{
+  "invalidOTP": "OTP inválido. Por favor, inténtelo de nuevo.",
+  "expiredOTP": "El OTP ha caducado. Por favor, solicite uno nuevo.",
+  "maxAttemptsReached": "Intentos máximos alcanzados. Por favor, inténtelo más tarde.",
+  "networkError": "Error de red. Por favor, verifique su conexión.",
+  "otpSendFailed": "Error al enviar OTP. Por favor, inténtelo de nuevo.",
+  "verificationFailed": "Verificación fallida. Por favor, inténtelo de nuevo.",
+  "unknownError": "Ocurrió un error desconocido. Por favor, inténtelo de nuevo."
+}

@@ -1,0 +1,28 @@
+{
+  "welcome": "स्वागत है",
+  "logout": "लॉग आउट",
+  "submit": "जमा करें",
+  "cancel": "रद्द करें",
+  "loading": "लोड हो रहा है...",
+  "confirm": "पुष्टि करें",
+  "close": "बंद करें",
+  "retry": "पुनः प्रयास करें",
+  "languageSwitcher": {
+    "title": "भाषा चुनें",
+    "currentLanguage": "वर्तमान भाषा"
+  },
+  "otp": {
+    "title": "OTP सत्यापित करें",
+    "emailMessage": "आपके ईमेल पते पर एक OTP भेजा गया है",
+    "mobileMessage": "आपके मोबाइल नंबर पर एक OTP भेजा गया है",
+    "enterOTP": "OTP दर्ज करें",
+    "verify": "सत्यापित करें",
+    "resend": "OTP पुनः भेजें",
+    "expiresIn": "{{time}} सेकंड में समाप्त हो जाएगा",
+    "attemptsRemaining": "{{count}} प्रयास शेष हैं"
+  },
+  "messages": {
+    "languageChanged": "भाषा सफलतापूर्वक बदल गई",
+    "verificationRequired": "भाषा बदलने के लिए सत्यापन आवश्यक है"
+  }
+}

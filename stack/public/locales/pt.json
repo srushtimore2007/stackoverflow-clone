@@ -1,0 +1,79 @@
+{
+  "common": {
+    "login": "Entrar",
+    "signup": "Cadastrar",
+    "logout": "Sair",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "search": "Pesquisar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "welcome": "Bem-vindo à nossa plataforma",
+    "home": "Início",
+    "profile": "Perfil",
+    "settings": "Configurações"
+  },
+  "auth": {
+    "email": "E-mail",
+    "password": "Senha",
+    "confirm_password": "Confirmar Senha",
+    "forgot_password": "Esqueceu a senha?",
+    "remember_me": "Lembre-me",
+    "already_have_account": "Já tem uma conta?",
+    "dont_have_account": "Não tem uma conta?",
+    "login_success": "Login bem-sucedido",
+    "signup_success": "Conta criada com sucesso",
+    "invalid_credentials": "E-mail ou senha inválidos",
+    "password_mismatch": "As senhas não coincidem",
+    "login_to_account": "Entre na sua conta",
+    "enter_email_password_continue": "Digite seu e-mail e senha para continuar",
+    "otp_required_for_login": "OTP necessário para login",
+    "create_account": "Crie sua conta",
+    "join_community": "Junte-se à comunidade Stack Overflow",
+    "signup_with_google": "Cadastre-se com Google",
+    "signup_with_github": "Cadastre-se com GitHub",
+    "or_continue_with": "Ou continuar com",
+    "display_name": "Nome de exibição",
+    "enter_display_name": "Digite seu nome de exibição",
+    "password_min_length": "A senha deve ter pelo menos 8 caracteres.",
+    "agree_terms_privacy": "Concordo com Termos e Política de Privacidade"
+  },
+  "questions": {
+    "ask_question": "Fazer Pergunta",
+    "question_title": "Título da Pergunta",
+    "question_body": "Corpo da Pergunta",
+    "tags": "Tags",
+    "post_question": "Publicar Pergunta",
+    "no_questions": "Nenhuma pergunta encontrada",
+    "view_question": "Ver Pergunta",
+    "answers_count": "Respostas",
+    "votes_count": "Votos",
+    "views_count": "Visualizações"
+  },
+  "answers": {
+    "answer": "Resposta",
+    "your_answer": "Sua Resposta",
+    "post_answer": "Publicar Resposta",
+    "no_answers": "Sem respostas ainda",
+    "accept_answer": "Aceitar Resposta",
+    "accepted": "Aceito"
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "questions": "Perguntas",
+    "users": "Usuários",
+    "notifications": "Notificações",
+    "help": "Ajuda"
+  },
+  "messages": {
+    "network_error": "Erro de rede. Por favor, verifique sua conexão.",
+    "something_went_wrong": "Algo deu errado. Por favor, tente novamente.",
+    "operation_successful": "Operação concluída com sucesso",
+    "confirm_delete": "Tem certeza de que deseja excluir este item?",
+    "all_fields_required": "Todos os campos são obrigatórios"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "welcome": "欢迎",
+  "logout": "登出",
+  "submit": "提交",
+  "cancel": "取消",
+  "loading": "加载中...",
+  "confirm": "确认",
+  "close": "关闭",
+  "retry": "重试",
+  "languageSwitcher": {
+    "title": "选择语言",
+    "currentLanguage": "当前语言"
+  },
+  "otp": {
+    "title": "验证OTP",
+    "emailMessage": "OTP已发送到您的电子邮件地址",
+    "mobileMessage": "OTP已发送到您的手机号码",
+    "enterOTP": "输入OTP",
+    "verify": "验证",
+    "resend": "重新发送OTP",
+    "expiresIn": "{{time}}秒后过期",
+    "attemptsRemaining": "剩余{{count}}次尝试"
+  },
+  "messages": {
+    "languageChanged": "语言更改成功",
+    "verificationRequired": "更改语言需要验证"
+  }
+}
