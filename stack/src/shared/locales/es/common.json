@@ -13,13 +13,36 @@
   },
   "otp": {
     "title": "Verificar OTP",
-    "emailMessage": "Se ha enviado un OTP a su dirección de correo electrónico",
-    "mobileMessage": "Se ha enviado un OTP a su número de móvil",
+    "emailMessage": "Un OTP ha sido enviado a tu dirección de correo electrónico",
+    "mobileMessage": "Un OTP ha sido enviado a tu número de móvil",
     "enterOTP": "Ingresar OTP",
     "verify": "Verificar",
     "resend": "Reenviar OTP",
     "expiresIn": "Expira en {{time}} segundos",
-    "attemptsRemaining": "{{count}} intentos restantes"
+    "attemptsRemaining": "{{count}} intentos restantes",
+    "verifyTitle": "Verificar OTP",
+    "subtitle": "Ingresa el OTP enviado a tu correo/teléfono",
+    "otpLabel": "Contraseña de Un Solo Uso (OTP)",
+    "placeholder": "000000",
+    "verifying": "Verificando...",
+    "invalid": "OTP inválido",
+    "emailRequired": "El correo electrónico es requerido para la verificación",
+    "success": "OTP enviado exitosamente",
+    "loginSuccess": "¡Inicio de sesión exitoso!",
+    "verificationFailed": "Falló la verificación OTP",
+    "resendMessage": "Por favor regresa a la página de inicio de sesión para solicitar un nuevo OTP",
+    "backToLogin": "Volver al Inicio de Sesión",
+    "send": "Enviar OTP",
+    "sending": "Enviando...",
+    "enterOtp": "Ingresar OTP",
+    "resendIn": "Reenviar en",
+    "verified": "OTP verificado exitosamente",
+    "failedToSend": "Falló el envío OTP",
+    "failedToVerify": "Falló la verificación OTP",
+    "failedToResend": "Falló el reenvío OTP",
+    "resent": "OTP reenviado exitosamente",
+    "useOtpToVerify": "Usa este OTP para verificar tu número de móvil",
+    "expired": "OTP expirado"
   },
   "forgotPassword": {
     "title": "Contraseña olvidada",
@@ -43,19 +66,29 @@
     "securityNoticeText": "Si no solicitó este restablecimiento de contraseña, contacte con soporte inmediatamente."
   },
   "home": {
-    "topQuestions": "Preguntas Principales",
+    "title": "Preguntas Principales",
     "askQuestion": "Hacer Pregunta",
     "questions": "preguntas",
     "newest": "Más Recientes",
     "active": "Activas",
     "bountied": "Con Recompensa",
     "unanswered": "Sin Responder",
-    "more": "Más",
-    "filter": "Filtrar",
+    "more": "Más ▼",
+    "filter": "🔍 Filtrar",
     "votes": "votos",
     "answer": "respuesta",
     "answers": "respuestas",
-    "asked": "preguntó"
+    "noQuestions": "No se encontraron preguntas",
+    "asked": "Preguntó",
+    "heroTitle": "Obtén respuestas a tus preguntas",
+    "heroSubtitle": "Únete a nuestra comunidad de desarrolladores y comparte conocimiento",
+    "searchPlaceholder": "Buscar preguntas...",
+    "recentQuestions": "Preguntas Recientes",
+    "askFirstQuestion": "Haz la primera pregunta",
+    "filterByTags": "Filtrar por etiquetas",
+    "sortBy": "Ordenar por",
+    "oldest": "Más Antiguo",
+    "mostPopular": "Más Popular"
   },
   "navbar": {
     "about": "Acerca de",
@@ -83,6 +116,52 @@
     "articles": "Artículos",
     "companies": "Empresas"
   },
+  "users": {
+    "title": "Usuarios — Encuentra amigos para publicar en el Espacio Público",
+    "searchPlaceholder": "Buscar por nombre o correo electrónico",
+    "noUsersFound": "No se encontraron usuarios.",
+    "addFriend": "Agregar amigo",
+    "friends": "Amigos",
+    "adding": "Agregando...",
+    "joined": "Se unió",
+    "friendAdded": "¡Amigo agregado!",
+    "friendAddFailed": "Error al agregar amigo",
+    "loginToAddFriends": "Inicia sesión para agregar amigos"
+  },
+  "friends": {
+    "title": "Mis amigos ({{count}})",
+    "subtitle": "Agrega amigos desde la página Usuarios para desbloquear la publicación en el Espacio Público.",
+    "noFriends": "Sin amigos todavía.",
+    "findUsers": "Buscar usuarios para agregar como amigos",
+    "loginToSeeFriends": "Inicia sesión para ver tus amigos.",
+    "joined": "Se unió"
+  },
+  "loginHistory": {
+    "title": "Historial de inicio de sesión",
+    "subtitle": "Ver tus inicios de sesión recientes",
+    "noHistory": "No hay historial de inicio de sesión disponible.",
+    "loginTime": "Tiempo de inicio de sesión",
+    "ipAddress": "Dirección IP",
+    "device": "Dispositivo",
+    "location": "Ubicación",
+    "status": "Estado",
+    "successful": "Exitoso",
+    "failed": "Fallido",
+    "unknown": "Desconocido"
+  },
+  "feed": {
+    "title": "Espacio Público",
+    "loginToPost": "Inicia sesión para crear publicaciones.",
+    "noPosts": "No hay publicaciones aún. ¡Sé el primero en publicar!",
+    "loading": "Cargando publicaciones...",
+    "addComment": "Agregar un comentario...",
+    "comment": "Comentar",
+    "like": "Me gusta",
+    "share": "Compartir",
+    "postedBy": "Publicado por",
+    "comments": "Comentarios",
+    "replies": "Respuestas"
+  },
   "askQuestion": {
     "title": "Hacer una pregunta pública",
     "pleaseLogin": "Por favor inicia sesión para hacer una pregunta",
@@ -102,6 +181,105 @@
     "tagsHelp": "Añade hasta 5 etiquetas para describir sobre qué es tu pregunta.",
     "tagPlaceholder": "ej. javascript react nextjs",
     "reviewQuestion": "Revisar tu pregunta"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión en tu cuenta",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "button": "Iniciar sesión",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿No tienes una cuenta?",
+      "signup": "Registrarse"
+    },
+    "signup": {
+      "title": "Crear una cuenta",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "button": "Registrarse",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión"
+    },
+    "errors": {
+      "invalidCredentials": "Credenciales inválidas",
+      "requiredField": "Este campo es obligatorio",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    }
+  },
+  "rightSidebar": {
+    "blogTitle": "El Blog de Overflow",
+    "blogPost1": "Una nueva era de Stack Overflow",
+    "blogPost2": "¿Cómo tu película favorita está cambiando el idioma de aprendizaje tecnológico?",
+    "metaTitle": "Destacado en Meta",
+    "metaPost1": "Resultados de la Comunidad de Preguntas de Junio 2025",
+    "metaPost2": "¿Nos ayudarás a construir nuestra nueva identidad visual?",
+    "policy": "Filtros Personalizados",
+    "customFilters": "Crear un filtro personalizado",
+    "watchedTags": "Etiquetas Vigiladas",
+    "watchTagsDesc": "Vigila etiquetas para curar tu lista de preguntas.",
+    "watchTag": "Vigilar una etiqueta"
+  },
+  "subscription": {
+    "title": "Elige Tu Plan",
+    "perMonth": "/mes",
+    "plans": {
+      "free": {
+        "name": "Plan Gratuito",
+        "limit": "1 pregunta/día",
+        "features": {
+          "questionPerDay": "1 pregunta por día",
+          "basicSupport": "Soporte básico",
+          "communityAccess": "Acceso a la comunidad"
+        }
+      },
+      "bronze": {
+        "name": "Plan Bronce",
+        "limit": "5 preguntas/día",
+        "features": {
+          "questionsPerDay": "5 preguntas por día",
+          "prioritySupport": "Soporte prioritario",
+          "emailNotifications": "Notificaciones por correo electrónico"
+        }
+      },
+      "silver": {
+        "name": "Plan Plata",
+        "limit": "10 preguntas/día",
+        "features": {
+          "questionsPerDay": "10 preguntas por día",
+          "premiumSupport": "Soporte premium",
+          "advancedAnalytics": "Análisis avanzados"
+        }
+      },
+      "gold": {
+        "name": "Plan Oro",
+        "limit": "Preguntas ilimitadas",
+        "features": {
+          "unlimitedQuestions": "Preguntas ilimitadas",
+          "vipSupport": "Soporte VIP",
+          "allPremiumFeatures": "Todas las características premium"
+        }
+      }
+    },
+    "buttons": {
+      "processing": "Procesando...",
+      "paymentWindowClosed": "Ventana de Pago Cerrada",
+      "upgradePlan": "Actualizar Plan"
+    },
+    "paymentWindow": {
+      "open": "💳 Ventana de Pago Abierta (10:00 AM - 11:00 AM IST)",
+      "closed": "⏰ Ventana de Pago Cerrada"
+    },
+    "status": {
+      "currentPlan": "💡 Plan Actual"
+    },
+    "messages": {
+      "freePlanNoPayment": "¡El plan gratuito no requiere pago!",
+      "alreadyOnPlan": "¡Ya estás en este plan!",
+      "paymentWindowClosed": "Los pagos solo están permitidos entre 10:00 AM y 11:00 AM IST.",
+      "failedToCreateOrder": "Error al crear orden de pago"
+    }
   },
   "messages": {
     "languageChanged": "Idioma cambiado exitosamente",

@@ -28,6 +28,7 @@ import loginHistoryRoutes from "./routes/loginHistory.js";
 import mobileOtpRoutes from "./routes/mobileOtp.js";
  
 import otpRoutes from "./routes/otp.js";
+import translateRoutes from "./routes/translate.js";
 
 const app = express();
 
@@ -82,22 +83,29 @@ app.use("/api/login-history", loginHistoryRoutes);
 // import otpRoutes from "./routes/otp.js";
 app.use("/api/otp", otpRoutes);
 
+// ✅ Translation routes
+app.use("/api/translate", translateRoutes);
+
 // app.use("/api", router);
 // ======================
 // ✅ Server + DB
 // ======================
 const PORT = process.env.PORT || 5000;
-const databaseurl = process.env.MONGODB_URL;
+
+const databaseurl =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/stackoverflow";
 
 mongoose
   .connect(databaseurl)
   .then(() => {
     console.log("✅ Connected to MongoDB");
+
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err.message);
+    process.exit(1); // stop server if DB fails
   });
 

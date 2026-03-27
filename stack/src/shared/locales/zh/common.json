@@ -19,7 +19,30 @@
     "verify": "验证",
     "resend": "重新发送OTP",
     "expiresIn": "{{time}}秒后过期",
-    "attemptsRemaining": "剩余{{count}}次尝试"
+    "attemptsRemaining": "剩余{{count}}次尝试",
+    "verifyTitle": "验证OTP",
+    "subtitle": "输入发送到您邮箱/手机的OTP",
+    "otpLabel": "一次性密码 (OTP)",
+    "placeholder": "000000",
+    "verifying": "验证中...",
+    "invalid": "OTP无效",
+    "emailRequired": "验证需要邮箱",
+    "success": "OTP发送成功",
+    "loginSuccess": "登录成功！",
+    "verificationFailed": "OTP验证失败",
+    "resendMessage": "请返回登录页面请求新的OTP",
+    "backToLogin": "返回登录",
+    "send": "发送OTP",
+    "sending": "发送中...",
+    "enterOtp": "输入OTP",
+    "resendIn": "重新发送",
+    "verified": "OTP验证成功",
+    "failedToSend": "发送OTP失败",
+    "failedToVerify": "验证OTP失败",
+    "failedToResend": "重新发送OTP失败",
+    "resent": "OTP重新发送成功",
+    "useOtpToVerify": "使用此OTP验证您的手机号码",
+    "expired": "OTP已过期"
   },
   "forgotPassword": {
     "title": "忘记密码",
@@ -39,7 +62,7 @@
     "userNotFound": "用户未找到",
     "rateLimitExceeded": "您每天只能请求一次密码重置",
     "successMessage": "新密码已发送到您的邮箱。",
-    "securityNotice": "🔒 安全通知",
+    "securityNotice": " 安全通知",
     "securityNoticeText": "如果您未请求此密码重置，请立即联系支持。"
   },
   "home": {
@@ -83,6 +106,77 @@
     "articles": "文章",
     "companies": "公司"
   },
+  "users": {
+    "title": "用户 — 在公共空间发布内容时寻找好友",
+    "searchPlaceholder": "按姓名或邮箱搜索",
+    "noUsersFound": "未找到用户。",
+    "addFriend": "添加好友",
+    "friends": "好友",
+    "adding": "添加中...",
+    "joined": "加入",
+    "friendAdded": "好友已添加！",
+    "friendAddFailed": "添加好友失败",
+    "loginToAddFriends": "登录以添加好友"
+  },
+  "friends": {
+    "title": "我的好友 ({{count}})",
+    "subtitle": "从用户页面添加好友以解锁在公共空间的发布权限。",
+    "noFriends": "还没有好友。",
+    "findUsers": "查找用户以添加为好友",
+    "loginToSeeFriends": "登录以查看您的好友。",
+    "joined": "加入"
+  },
+  "loginHistory": {
+    "title": "登录历史",
+    "subtitle": "查看您最近的登录记录",
+    "noHistory": "没有可用的登录历史。",
+    "loginTime": "登录时间",
+    "ipAddress": "IP地址",
+    "device": "设备",
+    "location": "位置",
+    "status": "状态",
+    "successful": "成功",
+    "failed": "失败",
+    "unknown": "未知"
+  },
+  "feed": {
+    "title": "公共空间",
+    "loginToPost": "登录以创建帖子。",
+    "noPosts": "还没有帖子。成为第一个发帖的人！",
+    "loading": "加载帖子中...",
+    "addComment": "添加评论...",
+    "comment": "评论",
+    "like": "点赞",
+    "share": "分享",
+    "postedBy": "发布者",
+    "comments": "评论",
+    "replies": "回复"
+  },
+  "home": {
+    "title": "热门问题",
+    "askQuestion": "提问",
+    "questions": "问题",
+    "newest": "最新",
+    "active": "活跃",
+    "bountied": "悬赏",
+    "unanswered": "未回答",
+    "more": "更多 ▼",
+    "filter": "🔍 筛选",
+    "votes": "投票",
+    "answer": "回答",
+    "answers": "回答",
+    "noQuestions": "未找到问题",
+    "asked": "提问",
+    "heroTitle": "获取您问题的答案",
+    "heroSubtitle": "加入我们的开发者社区并分享知识",
+    "searchPlaceholder": "搜索问题...",
+    "recentQuestions": "最近的问题",
+    "askFirstQuestion": "问第一个问题",
+    "filterByTags": "按标签筛选",
+    "sortBy": "排序方式",
+    "oldest": "最旧",
+    "mostPopular": "最热门"
+  },
   "askQuestion": {
     "title": "提一个公开问题",
     "pleaseLogin": "请登录以提问",
@@ -102,6 +196,105 @@
     "tagsHelp": "添加最多5个标签来描述您的问题是关于什么的。",
     "tagPlaceholder": "例如：javascript react nextjs",
     "reviewQuestion": "审查您的问题"
+  },
+  "auth": {
+    "login": {
+      "title": "登录您的账户",
+      "email": "邮箱",
+      "password": "密码",
+      "button": "登录",
+      "forgotPassword": "忘记密码？",
+      "noAccount": "没有账户？",
+      "signup": "注册"
+    },
+    "signup": {
+      "title": "创建您的账户",
+      "name": "姓名",
+      "email": "邮箱",
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "button": "注册",
+      "haveAccount": "已经有账户？",
+      "login": "登录"
+    },
+    "errors": {
+      "invalidCredentials": "无效凭据",
+      "requiredField": "此字段为必填项",
+      "passwordMismatch": "密码不匹配"
+    }
+  },
+  "rightSidebar": {
+    "blogTitle": "Overflow 博客",
+    "blogPost1": "Stack Overflow 的新时代",
+    "blogPost2": "您最喜欢的电影如何改变语言学习技术？",
+    "metaTitle": "Meta 上的特色",
+    "metaPost1": "2025年6月社区提问冲刺的结果",
+    "metaPost2": "您会帮助我们构建新的视觉身份吗？",
+    "policy": "自定义过滤器",
+    "customFilters": "创建自定义过滤器",
+    "watchedTags": "已关注的标签",
+    "watchTagsDesc": "关注标签以整理您的问题列表。",
+    "watchTag": "关注一个标签"
+  },
+  "subscription": {
+    "title": "选择您的计划",
+    "perMonth": "/月",
+    "plans": {
+      "free": {
+        "name": "免费计划",
+        "limit": "1 问题/天",
+        "features": {
+          "questionPerDay": "每天1个问题",
+          "basicSupport": "基本支持",
+          "communityAccess": "社区访问"
+        }
+      },
+      "bronze": {
+        "name": "青铜计划",
+        "limit": "5 问题/天",
+        "features": {
+          "questionsPerDay": "每天5个问题",
+          "prioritySupport": "优先支持",
+          "emailNotifications": "邮件通知"
+        }
+      },
+      "silver": {
+        "name": "白银计划",
+        "limit": "10 问题/天",
+        "features": {
+          "questionsPerDay": "每天10个问题",
+          "premiumSupport": "高级支持",
+          "advancedAnalytics": "高级分析"
+        }
+      },
+      "gold": {
+        "name": "黄金计划",
+        "limit": "无限问题",
+        "features": {
+          "unlimitedQuestions": "无限问题",
+          "vipSupport": "VIP支持",
+          "allPremiumFeatures": "所有高级功能"
+        }
+      }
+    },
+    "buttons": {
+      "processing": "处理中...",
+      "paymentWindowClosed": "付款窗口已关闭",
+      "upgradePlan": "升级"
+    },
+    "paymentWindow": {
+      "open": "💳 付款窗口开放 (10:00 AM - 11:00 AM IST)",
+      "closed": "⏰ 付款窗口已关闭"
+    },
+    "status": {
+      "currentPlan": "💡 当前计划"
+    },
+    "messages": {
+      "freePlanNoPayment": "免费计划无需付款！",
+      "alreadyOnPlan": "您已经在此计划上！",
+      "paymentWindowClosed": "付款仅在10:00 AM和11:00 AM IST之间允许。",
+      "failedToCreateOrder": "创建付款订单失败"
+    }
   },
   "messages": {
     "languageChanged": "语言更改成功",

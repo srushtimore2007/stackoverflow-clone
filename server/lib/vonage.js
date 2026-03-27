@@ -2,10 +2,19 @@
 import { Vonage } from '@vonage/server-sdk';
 
 // Initialize Vonage client
-const vonage = new Vonage({
-  apiKey: process.env.VONAGE_API_KEY,
-  apiSecret: process.env.VONAGE_API_SECRET
-});
+// const vonage = new Vonage({
+//   apiKey: process.env.VONAGE_API_KEY,
+//   apiSecret: process.env.VONAGE_API_SECRET
+// });
+const apiKey = process.env.VONAGE_API_KEY;
+const apiSecret = process.env.VONAGE_API_SECRET;
+
+const vonage = (apiKey && apiSecret)
+  ? new Vonage({
+      apiKey,
+      apiSecret
+    })
+  : null;
 
 // Validate phone number format
 const validatePhoneNumber = (phone) => {
@@ -27,8 +36,16 @@ const formatPhoneNumber = (phone) => {
   return phone;
 };
 
+
 // Send OTP via Vonage SMS
 const sendOTP = async (phoneNumber, otp) => {
+  if (!vonage) {
+  console.warn("⚠️ Vonage not configured");
+  return {
+    success: false,
+    error: "SMS service not configured"
+  };
+}
   try {
     const message = `Your verification code is: ${otp}. Valid for 5 minutes.`;
     

@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import axiosInstance from "../../lib/axiosinstance";
 import { useAuth } from "../../lib/AuthContext";
 import Link from "next/link";
+import { useTranslationManager } from "../../hooks/useTranslationManager";
 
 interface Comment {
   _id: string;
@@ -31,6 +32,7 @@ interface Post {
 
 export default function FeedPage() {
   const { user } = useAuth();
+  const { t } = useTranslationManager();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [commentTexts, setCommentTexts] = useState<Record<string, string>>({});
@@ -103,16 +105,16 @@ export default function FeedPage() {
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6 max-w-2xl mx-auto">
-        <h1 className="text-xl lg:text-2xl font-semibold mb-6">Public Space</h1>
+        <h1 className="text-xl lg:text-2xl font-semibold mb-6">{t('feed.title')}</h1>
 
         {user && <CreatePost onSuccess={fetchFeed} />}
 
         {!user && (
           <p className="text-gray-600 mb-6">
             <Link href="/auth/login" className="text-blue-600 hover:underline">
-              Log in
+              {t('login')}
             </Link>{" "}
-            to create posts.
+            {t('feed.loginToPost')}
           </p>
         )}
 
@@ -121,7 +123,7 @@ export default function FeedPage() {
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500" />
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center text-gray-500 py-12">No posts yet. Be the first to post!</div>
+          <div className="text-center text-gray-500 py-12">{t('feed.noPosts')}</div>
         ) : (
           <div className="space-y-6">
             {posts.map((post) => (
@@ -175,16 +177,16 @@ export default function FeedPage() {
                     onClick={() => handleLike(post._id)}
                     className={`flex items-center gap-1 ${isLiked(post) ? "text-red-500" : "text-gray-600 hover:text-red-500"}`}
                   >
-                    ❤️ {post.likes?.length ?? 0}
+                    ❤️ {post.likes?.length ?? 0} {t('feed.like')}
                   </button>
                   <span className="text-gray-600 flex items-center gap-1">
-                    💬 {post.comments?.length ?? 0}
+                    💬 {post.comments?.length ?? 0} {t('feed.comments')}
                   </span>
                   <button
                     onClick={() => handleShare(post._id)}
                     className="flex items-center gap-1 text-gray-600 hover:text-blue-600"
                   >
-                    🔁 {post.shares ?? 0}
+                    🔁 {post.shares ?? 0} {t('feed.share')}
                   </button>
                 </div>
 
@@ -207,7 +209,7 @@ export default function FeedPage() {
                 {user && (
                   <div className="p-4 border-t border-gray-100 flex gap-2">
                     <Input
-                      placeholder="Add a comment..."
+                      placeholder={t('feed.addComment')}
                       value={commentTexts[post._id] || ""}
                       onChange={(e) =>
                         setCommentTexts((prev) => ({ ...prev, [post._id]: e.target.value }))
@@ -221,7 +223,7 @@ export default function FeedPage() {
                       className="flex-1"
                     />
                     <Button size="sm" onClick={() => handleComment(post._id)}>
-                      Comment
+                      {t('feed.comment')}
                     </Button>
                   </div>
                 )}

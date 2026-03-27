@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/AuthContext";
+import { useTranslationManager } from "../hooks/useTranslationManager";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -19,6 +20,7 @@ import { toast } from "react-toastify";
 const LoginOTPVerification = () => {
   const router = useRouter();
   const { verifyLoginOTP, loading } = useAuth();
+  const { t, locale } = useTranslationManager();
   
   // Get email from URL query or localStorage
   const [email, setEmail] = useState("");
@@ -48,20 +50,20 @@ const LoginOTPVerification = () => {
     setSuccess("");
 
     if (!otp || otp.length !== 6) {
-      setError("Please enter a valid 6-digit OTP");
+      setError(t("otp.invalid"));
       return;
     }
 
     if (!email) {
-      setError("Email is required for verification");
+      setError(t("otp.emailRequired"));
       return;
     }
 
     try {
       await verifyLoginOTP({ email, otp });
       
-      setSuccess("OTP verified successfully! Redirecting...");
-      toast.success("Login successful!");
+      setSuccess(t("otp.success"));
+      toast.success(t("otp.loginSuccess"));
       
       // Clear stored email
       localStorage.removeItem("pendingLoginEmail");
@@ -72,7 +74,7 @@ const LoginOTPVerification = () => {
       }, 1500);
       
     } catch (error: any) {
-      const errorMessage = error.message || "OTP verification failed";
+      const errorMessage = error.message || t("otp.verificationFailed");
       setError(errorMessage);
       toast.error(errorMessage);
     }
@@ -81,11 +83,11 @@ const LoginOTPVerification = () => {
   const handleResendOTP = async () => {
     // This would require a new endpoint for resending OTP
     // For now, we'll just show a message
-    toast.info("Please go back to login page to request a new OTP");
+    toast.info(t("otp.resendMessage"));
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div key={locale} className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6 lg:mb-8">
           <Link href="/" className="flex items-center justify-center mb-4">
@@ -103,10 +105,10 @@ const LoginOTPVerification = () => {
         <Card>
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-xl lg:text-2xl">
-              Verify Your Login
+              {t("otp.verifyTitle")}
             </CardTitle>
             <CardDescription>
-              Enter the 6-digit OTP sent to your email
+              {t("otp.subtitle")}
               {email && (
                 <div className="text-sm text-gray-600 mt-2">
                   {email}
@@ -118,11 +120,11 @@ const LoginOTPVerification = () => {
           <CardContent className="space-y-4">
             <form onSubmit={handleVerifyOTP}>
               <div className="space-y-2">
-                <Label htmlFor="otp">One-Time Password (OTP)</Label>
+                <Label htmlFor="otp">{t("otp.otpLabel")}</Label>
                 <Input
                   id="otp"
                   type="text"
-                  placeholder="000000"
+                  placeholder={t("otp.placeholder")}
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   maxLength={6}
@@ -148,7 +150,7 @@ const LoginOTPVerification = () => {
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={loading || otp.length !== 6}
               >
-                {loading ? "Verifying..." : "Verify OTP"}
+                {loading ? t("otp.verifying") : t("otp.verify")}
               </Button>
             </form>
 
@@ -158,7 +160,7 @@ const LoginOTPVerification = () => {
                 className="text-sm text-blue-600 hover:underline"
                 disabled={loading}
               >
-                Didn't receive the code? Request again
+                {t("otp.resend")}
               </button>
               
               <div className="text-sm text-gray-600">
@@ -166,7 +168,7 @@ const LoginOTPVerification = () => {
                   href="/auth/login"
                   className="text-blue-600 hover:underline"
                 >
-                  Back to Login
+                  {t("otp.backToLogin")}
                 </Link>
               </div>
             </div>

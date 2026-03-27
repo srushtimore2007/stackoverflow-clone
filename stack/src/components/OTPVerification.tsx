@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTranslationManager } from '../hooks/useTranslationManager';
 
 interface OTPVerificationProps {
   onVerificationSuccess?: (phoneNumber: string) => void;
@@ -8,6 +9,7 @@ interface OTPVerificationProps {
 export const OTPVerification: React.FC<OTPVerificationProps> = ({ 
   onVerificationSuccess 
 }) => {
+  const { t } = useTranslationManager();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [receivedOtp, setReceivedOtp] = useState('');
@@ -77,15 +79,15 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
       if (response.data.success) {
         setIsOtpSent(true);
         setReceivedOtp(response.data.otp || '');
-        showMessage('OTP generated successfully!', 'success');
+        showMessage(t('otp.success'), 'success');
         startResendTimer();
       } else {
-        showMessage(response.data.message || 'Failed to send OTP', 'error');
+        showMessage(response.data.message || t('otp.failedToSend'), 'error');
       }
     } catch (error: any) {
       console.error('Send OTP error:', error.response?.data || error.message);
       showMessage(
-        error.response?.data?.message || 'Failed to send OTP',
+        error.response?.data?.message || t('otp.failedToSend'),
         'error'
       );
     } finally {
@@ -98,7 +100,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     e.preventDefault();
 
     if (!otp || otp.length !== 6) {
-      showMessage('Please enter a 6-digit OTP', 'error');
+      showMessage(t('otp.invalid'), 'error');
       return;
     }
 
@@ -114,7 +116,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
       );
 
       if (response.data.success) {
-        showMessage('OTP verified successfully!', 'success');
+        showMessage(t('otp.verified'), 'success');
         clearResendTimer();
         onVerificationSuccess?.(phoneNumber);
 
@@ -125,12 +127,12 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
           setIsOtpSent(false);
         }, 2000);
       } else {
-        showMessage(response.data.message || 'Invalid OTP', 'error');
+        showMessage(response.data.message || t('otp.invalid'), 'error');
       }
     } catch (error: any) {
       console.error('Verify OTP error:', error.response?.data || error.message);
       showMessage(
-        error.response?.data?.message || 'Failed to verify OTP',
+        error.response?.data?.message || t('otp.failedToVerify'),
         'error'
       );
     } finally {
@@ -156,15 +158,15 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
 
       if (response.data.success) {
         setReceivedOtp(response.data.otp || '');
-        showMessage('OTP resent successfully!', 'success');
+        showMessage(t('otp.resent'), 'success');
         startResendTimer();
       } else {
-        showMessage(response.data.message || 'Failed to resend OTP', 'error');
+        showMessage(response.data.message || t('otp.failedToResend'), 'error');
       }
     } catch (error: any) {
       console.error('Resend OTP error:', error.response?.data || error.message);
       showMessage(
-        error.response?.data?.message || 'Failed to resend OTP',
+        error.response?.data?.message || t('otp.failedToResend'),
         'error'
       );
     } finally {
@@ -174,7 +176,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Mobile Verification</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">{t('otp.verifyTitle')}</h2>
 
       {message && (
         <div
@@ -194,7 +196,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             Your OTP is: <span className="text-2xl text-yellow-900">{receivedOtp}</span>
           </p>
           <p className="text-center text-sm text-yellow-600 mt-1">
-            Use this OTP to verify your mobile number
+            {t('otp.useOtpToVerify')}
           </p>
         </div>
       )}
@@ -214,7 +216,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             disabled={isLoading || !phoneNumber}
             className="w-full bg-blue-600 text-white py-2 rounded-md"
           >
-            {isLoading ? 'Sending...' : 'Send OTP'}
+            {isLoading ? t('otp.sending') : t('otp.send')}
           </button>
         </form>
       ) : (
@@ -223,7 +225,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             type="text"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter OTP"
+            placeholder={t('otp.enterOtp')}
             className="w-full px-3 py-2 border rounded-md text-center"
           />
 
@@ -232,7 +234,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             disabled={isLoading || otp.length !== 6}
             className="w-full bg-green-600 text-white py-2 rounded-md"
           >
-            {isLoading ? 'Verifying...' : 'Verify OTP'}
+            {isLoading ? t('otp.verifying') : t('otp.verify')}
           </button>
 
           <button
@@ -241,7 +243,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             disabled={timeLeft > 0}
             className="w-full bg-gray-500 text-white py-2 rounded-md"
           >
-            {timeLeft > 0 ? `Resend in ${timeLeft}s` : 'Resend OTP'}
+            {timeLeft > 0 ? `${t('otp.resendIn')} ${timeLeft}s` : t('otp.resend')}
           </button>
         </form>
       )}

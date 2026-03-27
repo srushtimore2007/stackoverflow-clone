@@ -19,7 +19,30 @@
     "verify": "Verify",
     "resend": "Resend OTP",
     "expiresIn": "Expires in {{time}} seconds",
-    "attemptsRemaining": "{{count}} attempts remaining"
+    "attemptsRemaining": "{{count}} attempts remaining",
+    "verifyTitle": "Verify OTP",
+    "subtitle": "Enter the OTP sent to your email/phone",
+    "otpLabel": "One-Time Password (OTP)",
+    "placeholder": "000000",
+    "verifying": "Verifying...",
+    "invalid": "Invalid OTP",
+    "emailRequired": "Email is required for verification",
+    "success": "OTP sent successfully",
+    "loginSuccess": "Login successful!",
+    "verificationFailed": "OTP verification failed",
+    "resendMessage": "Please go back to login page to request a new OTP",
+    "backToLogin": "Back to Login",
+    "send": "Send OTP",
+    "sending": "Sending...",
+    "enterOtp": "Enter OTP",
+    "resendIn": "Resend in",
+    "verified": "OTP verified successfully",
+    "failedToSend": "Failed to send OTP",
+    "failedToVerify": "Failed to verify OTP",
+    "failedToResend": "Failed to resend OTP",
+    "resent": "OTP resent successfully",
+    "useOtpToVerify": "Use this OTP to verify your mobile number",
+    "expired": "OTP expired"
   },
   "login": {
     "title": "Log in to your account",
@@ -48,34 +71,34 @@
     "emailPlaceholder": "Email address",
     "phonePlaceholder": "Phone number",
     "resetButton": "Reset Password",
-    "processing": "Processing...",
-    "backToLogin": "← Back to Login",
-    "emptyIdentifier": "Please enter your email or phone number",
-    "networkError": "Network error. Please try again.",
-    "userNotFound": "User not found",
-    "rateLimitExceeded": "You can request password reset only once per day",
-    "successMessage": "New password has been sent to your email.",
-    "securityNotice": "🔒 Security Notice",
-    "securityNoticeText": "If you did not request this password reset, please contact support immediately."
+    "resetting": "Resetting...",
+    "resetSuccess": "New password has been sent to your email",
+    "resetFailed": "Reset failed. Try again.",
+    "backToLogin": "Back to Login"
   },
-  "home": {
-    "topQuestions": "Top Questions",
-    "askQuestion": "Ask Question",
-    "questions": "questions",
-    "newest": "Newest",
-    "active": "Active",
-    "bountied": "Bountied",
-    "unanswered": "Unanswered",
-    "more": "More",
-    "filter": "Filter",
-    "votes": "votes",
-    "answer": "answer",
-    "answers": "answers",
-    "asked": "asked"
+  "signup": {
+    "title": "Create your account",
+    "subtitle": "Enter your details to get started",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "m@example.com",
+    "passwordPlaceholder": "Create a password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "signupButton": "Sign Up",
+    "signingUp": "Creating account...",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Log in",
+    "allFieldsRequired": "All fields are required",
+    "passwordMismatch": "Passwords do not match",
+    "signupSuccess": "Account created successfully!",
+    "signupFailed": "Signup failed. Try again."
   },
   "navbar": {
     "about": "About",
-    "products": "Products", 
+    "products": "Products",
     "forTeams": "For Teams",
     "search": "Search...",
     "login": "Log in",
@@ -99,48 +122,186 @@
     "articles": "Articles",
     "companies": "Companies"
   },
-  "askQuestion": {
-    "title": "Ask a public question",
-    "pleaseLogin": "Please login to ask question",
-    "dailyLimit": "Daily question limit reached for your plan. Please upgrade to post more questions.",
-    "questionPosted": "Question posted successfully",
-    "postFailed": "Failed to post question",
-    "somethingWrong": "Something went wrong",
-    "limitReached": "You've reached your daily question limit ({{posted}}/{{limit}}).",
-    "upgradePlan": "Upgrade your plan to post more questions.",
-    "writingGood": "Writing a good question",
-    "titleHelp": "Be specific and imagine you're asking a question to another person.",
-    "titlePlaceholder": "e.g. How to center a div in CSS?",
-    "problemDetails": "What are the details of your problem?",
-    "problemHelp": "Introduce the problem and expand on what you put in the title. Minimum 20 characters.",
-    "problemPlaceholder": "Describe your problem in detail...",
-    "tags": "Tags",
-    "tagsHelp": "Add up to 5 tags to describe what your question is about.",
-    "tagPlaceholder": "e.g. javascript react nextjs",
-    "reviewQuestion": "Review your question"
+  "users": {
+    "title": "Users — Find friends to post in Public Space",
+    "noUsers": "No users found",
+    "searchPlaceholder": "Search users...",
+    "addFriend": "Add Friend",
+    "alreadyFriends": "Already Friends",
+    "searching": "Searching users...",
+    "friendAdded": "Friend added successfully!",
+    "friendAddFailed": "Failed to add friend. Try again.",
+    "loginToAddFriends": "Please log in to add friends"
   },
-  "signup": {
-    "allFieldsRequired": "All fields are required",
-    "signupSuccess": "Account created successfully",
-    "somethingWrong": "Something went wrong"
+  "friends": {
+    "title": "My Friends ({{count}})",
+    "subtitle": "Add friends from the Users page to unlock posting in Public Space.",
+    "unlockPublicSpace": "Find users to add as friends.",
+    "noFriends": "No friends yet.",
+    "findUsers": "Find users",
+    "joined": "Joined",
+    "loginToSeeFriends": "Log in to see your friends."
+  },
+  "loginHistory": {
+    "title": "Login History",
+    "subtitle": "Track your account login activity across different devices and locations.",
+    "noHistory": "No login history available.",
+    "recentLogins": "Recent Logins ({{count}})",
+    "loginTime": "Login Time",
+    "ipAddress": "IP Address",
+    "device": "Device",
+    "browser": "Browser",
+    "operatingSystem": "Operating System"
+  },
+  "feed": {
+    "title": "Public Space",
+    "loginToPost": "Log in to create posts.",
+    "noPosts": "No posts yet. Be the first to post!",
+    "loading": "Loading posts...",
+    "addComment": "Add a comment...",
+    "comment": "Comment",
+    "like": "Like",
+    "share": "Share",
+    "postedBy": "Posted by",
+    "comments": "Comments",
+    "replies": "Replies"
+  },
+  "home": {
+    "title": "Top Questions",
+    "askQuestion": "Ask Question",
+    "questions": "questions",
+    "newest": "Newest",
+    "active": "Active",
+    "bountied": "Bountied",
+    "unanswered": "Unanswered",
+    "more": "More ▼",
+    "filter": "🔍 Filter",
+    "votes": "votes",
+    "answer": "answer",
+    "answers": "answers",
+    "noQuestions": "No questions found",
+    "asked": "Asked",
+    "heroTitle": "Get answers to your questions",
+    "heroSubtitle": "Join our community of developers and share knowledge",
+    "searchPlaceholder": "Search questions...",
+    "recentQuestions": "Recent Questions",
+    "askFirstQuestion": "Ask the first question",
+    "filterByTags": "Filter by tags",
+    "sortBy": "Sort by",
+    "oldest": "Oldest",
+    "mostPopular": "Most Popular"
   },
   "auth": {
+    "login": {
+      "title": "Login to your account",
+      "email": "Email",
+      "password": "Password",
+      "button": "Login",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign up"
+    },
+    "signup": {
+      "title": "Create an account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "button": "Sign up",
+      "haveAccount": "Already have an account?",
+      "login": "Login"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid credentials",
+      "requiredField": "This field is required",
+      "passwordMismatch": "Passwords do not match"
+    },
     "create_account": "Create account",
-    "join_community": "Join the community",
+    "join_community": "Join community",
     "enter_email_password_continue": "Enter your email and password to continue",
     "login_to_account": "Log in to your account",
-    "email": "Email",
-    "password": "Password",
     "enter_display_name": "Enter display name",
     "signup_with_google": "Sign up with Google",
     "signup_with_github": "Sign up with GitHub",
     "or_continue_with": "Or continue with",
-    "agree_terms_privacy": "I agree to the Terms & Privacy Policy",
+    "agree_terms_privacy": "I agree to Terms & Privacy Policy",
     "password_min_length": "Password must be at least 8 characters",
     "already_have_account": "Already have an account?",
     "otp_required_for_login": "OTP required for login",
-    "login_success": "Login successful!",
-    "invalid_credentials": "Invalid credentials"
+    "login_success": "Login successful!"
+  },
+  "rightSidebar": {
+    "blogTitle": "The Overflow Blog",
+    "blogPost1": "A new era of Stack Overflow",
+    "blogPost2": "How your favorite movie is changing language learning technology",
+    "metaTitle": "Featured on Meta",
+    "metaPost1": "Results of the June 2025 Community Asks Sprint",
+    "metaPost2": "Will you help build our new visual identity?",
+    "policy": "Custom Filters",
+    "customFilters": "Create a custom filter",
+    "watchedTags": "Watched Tags",
+    "watchTagsDesc": "Watch tags to curate your list of questions.",
+    "watchTag": "Watch a tag"
+  },
+  "subscription": {
+    "title": "Choose Your Plan",
+    "perMonth": "/month",
+    "plans": {
+      "free": {
+        "name": "Free Plan",
+        "limit": "1 question/day",
+        "features": {
+          "questionPerDay": "1 question per day",
+          "basicSupport": "Basic support",
+          "communityAccess": "Community access"
+        }
+      },
+      "bronze": {
+        "name": "Bronze Plan",
+        "limit": "5 questions/day",
+        "features": {
+          "questionsPerDay": "5 questions per day",
+          "prioritySupport": "Priority support",
+          "emailNotifications": "Email notifications"
+        }
+      },
+      "silver": {
+        "name": "Silver Plan",
+        "limit": "10 questions/day",
+        "features": {
+          "questionsPerDay": "10 questions per day",
+          "premiumSupport": "Premium support",
+          "advancedAnalytics": "Advanced analytics"
+        }
+      },
+      "gold": {
+        "name": "Gold Plan",
+        "limit": "Unlimited questions",
+        "features": {
+          "unlimitedQuestions": "Unlimited questions",
+          "vipSupport": "VIP support",
+          "allPremiumFeatures": "All premium features"
+        }
+      }
+    },
+    "buttons": {
+      "processing": "Processing...",
+      "paymentWindowClosed": "Payment Window Closed",
+      "upgradePlan": "Upgrade Plan"
+    },
+    "paymentWindow": {
+      "open": "💳 Payment Window Open (10:00 AM - 11:00 AM IST)",
+      "closed": "⏰ Payment Window Closed"
+    },
+    "status": {
+      "currentPlan": "💡 Current Plan"
+    },
+    "messages": {
+      "freePlanNoPayment": "Free plan requires no payment!",
+      "alreadyOnPlan": "You are already on this plan!",
+      "paymentWindowClosed": "Payments are allowed only between 10:00 AM and 11:00 AM IST.",
+      "failedToCreateOrder": "Failed to create payment order"
+    }
   },
   "messages": {
     "languageChanged": "Language changed successfully",

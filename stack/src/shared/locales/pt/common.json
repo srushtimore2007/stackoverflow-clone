@@ -15,11 +15,34 @@
     "title": "Verificar OTP",
     "emailMessage": "Um OTP foi enviado para seu endereço de e-mail",
     "mobileMessage": "Um OTP foi enviado para seu número de celular",
-    "enterOTP": "Inserir OTP",
+    "enterOTP": "Digite o OTP",
     "verify": "Verificar",
     "resend": "Reenviar OTP",
     "expiresIn": "Expira em {{time}} segundos",
-    "attemptsRemaining": "{{count}} tentativas restantes"
+    "attemptsRemaining": "{{count}} tentativas restantes",
+    "verifyTitle": "Verificar OTP",
+    "subtitle": "Digite o OTP enviado para seu e-mail/telefone",
+    "otpLabel": "Senha de Uso Único (OTP)",
+    "placeholder": "000000",
+    "verifying": "Verificando...",
+    "invalid": "OTP inválido",
+    "emailRequired": "E-mail é requerido para verificação",
+    "success": "OTP enviado com sucesso",
+    "loginSuccess": "Login bem-sucedido!",
+    "verificationFailed": "Falha na verificação OTP",
+    "resendMessage": "Por favor volte à página de login para solicitar um novo OTP",
+    "backToLogin": "Voltar ao Login",
+    "send": "Enviar OTP",
+    "sending": "Enviando...",
+    "enterOtp": "Digite o OTP",
+    "resendIn": "Reenviar em",
+    "verified": "OTP verificado com sucesso",
+    "failedToSend": "Falha ao enviar OTP",
+    "failedToVerify": "Falha ao verificar OTP",
+    "failedToResend": "Falha ao reenviar OTP",
+    "resent": "OTP reenviado com sucesso",
+    "useOtpToVerify": "Use este OTP para verificar seu número de celular",
+    "expired": "OTP expirado"
   },
   "forgotPassword": {
     "title": "Esqueci a senha",
@@ -43,19 +66,29 @@
     "securityNoticeText": "Se você não solicitou esta redefinição de senha, entre em contato com o suporte imediatamente."
   },
   "home": {
-    "topQuestions": "Principais Perguntas",
+    "title": "Principais Perguntas",
     "askQuestion": "Fazer Pergunta",
     "questions": "perguntas",
     "newest": "Mais Recentes",
     "active": "Ativas",
     "bountied": "Com Recompensa",
     "unanswered": "Sem Resposta",
-    "more": "Mais",
-    "filter": "Filtrar",
+    "more": "Mais ▼",
+    "filter": "🔍 Filtrar",
     "votes": "votos",
     "answer": "resposta",
     "answers": "respostas",
-    "asked": "perguntou"
+    "noQuestions": "Nenhuma pergunta encontrada",
+    "asked": "Perguntou",
+    "heroTitle": "Obtenha respostas para suas perguntas",
+    "heroSubtitle": "Junte-se à nossa comunidade de desenvolvedores e compartilhe conhecimento",
+    "searchPlaceholder": "Pesquisar perguntas...",
+    "recentQuestions": "Perguntas Recentes",
+    "askFirstQuestion": "Faça a primeira pergunta",
+    "filterByTags": "Filtrar por tags",
+    "sortBy": "Ordenar por",
+    "oldest": "Mais Antigo",
+    "mostPopular": "Mais Popular"
   },
   "navbar": {
     "about": "Sobre",
@@ -83,6 +116,52 @@
     "articles": "Artigos",
     "companies": "Empresas"
   },
+  "users": {
+    "title": "Usuários — Encontre amigos para postar no Espaço Público",
+    "searchPlaceholder": "Buscar por nome ou e-mail",
+    "noUsersFound": "Nenhum usuário encontrado.",
+    "addFriend": "Adicionar amigo",
+    "friends": "Amigos",
+    "adding": "Adicionando...",
+    "joined": "Entrou",
+    "friendAdded": "Amigo adicionado!",
+    "friendAddFailed": "Falha ao adicionar amigo",
+    "loginToAddFriends": "Faça login para adicionar amigos"
+  },
+  "friends": {
+    "title": "Meus amigos ({{count}})",
+    "subtitle": "Adicione amigos da página Usuários para desbloquear postagens no Espaço Público.",
+    "noFriends": "Nenhum amigo ainda.",
+    "findUsers": "Encontrar usuários para adicionar como amigos",
+    "loginToSeeFriends": "Faça login para ver seus amigos.",
+    "joined": "Entrou"
+  },
+  "loginHistory": {
+    "title": "Histórico de login",
+    "subtitle": "Veja seus logins recentes",
+    "noHistory": "Nenhum histórico de login disponível.",
+    "loginTime": "Horário do login",
+    "ipAddress": "Endereço IP",
+    "device": "Dispositivo",
+    "location": "Localização",
+    "status": "Status",
+    "successful": "Bem-sucedido",
+    "failed": "Falhou",
+    "unknown": "Desconhecido"
+  },
+  "feed": {
+    "title": "Espaço Público",
+    "loginToPost": "Faça login para criar publicações.",
+    "noPosts": "Nenhuma publicação ainda. Seja o primeiro a publicar!",
+    "loading": "Carregando publicações...",
+    "addComment": "Adicionar um comentário...",
+    "comment": "Comentar",
+    "like": "Curtir",
+    "share": "Compartilhar",
+    "postedBy": "Publicado por",
+    "comments": "Comentários",
+    "replies": "Respostas"
+  },
   "askQuestion": {
     "title": "Fazer uma pergunta pública",
     "pleaseLogin": "Por favor, faça login para fazer uma pergunta",
@@ -102,6 +181,105 @@
     "tagsHelp": "Adicione até 5 tags para descrever sobre o que é sua pergunta.",
     "tagPlaceholder": "ex. javascript react nextjs",
     "reviewQuestion": "Revisar sua pergunta"
+  },
+  "auth": {
+    "login": {
+      "title": "Entre na sua conta",
+      "email": "E-mail",
+      "password": "Senha",
+      "button": "Entrar",
+      "forgotPassword": "Esqueceu a senha?",
+      "noAccount": "Não tem uma conta?",
+      "signup": "Cadastrar"
+    },
+    "signup": {
+      "title": "Criar uma conta",
+      "name": "Nome",
+      "email": "E-mail",
+      "password": "Senha",
+      "confirmPassword": "Confirmar senha",
+      "button": "Cadastrar",
+      "haveAccount": "Já tem uma conta?",
+      "login": "Entrar"
+    },
+    "errors": {
+      "invalidCredentials": "Credenciais inválidas",
+      "requiredField": "Este campo é obrigatório",
+      "passwordMismatch": "As senhas não coincidem"
+    }
+  },
+  "rightSidebar": {
+    "blogTitle": "O Blog Overflow",
+    "blogPost1": "Uma nova era do Stack Overflow",
+    "blogPost2": "Como seu filme favorito está mudando a tecnologia de aprendizagem de idioma?",
+    "metaTitle": "Destaque no Meta",
+    "metaPost1": "Resultados do Sprint de Perguntas da Comunidade de Junho 2025",
+    "metaPost2": "Você nos ajudará a construir nossa nova identidade visual?",
+    "policy": "Filtros Personalizados",
+    "customFilters": "Criar um filtro personalizado",
+    "watchedTags": "Tags Assistidas",
+    "watchTagsDesc": "Assista tags para curar sua lista de perguntas.",
+    "watchTag": "Assistir uma tag"
+  },
+  "subscription": {
+    "title": "Escolha seu plano",
+    "perMonth": "/mês",
+    "plans": {
+      "free": {
+        "name": "Plano Gratuito",
+        "limit": "1 pergunta/dia",
+        "features": {
+          "questionPerDay": "1 pergunta por dia",
+          "basicSupport": "Suporte básico",
+          "communityAccess": "Acesso à comunidade"
+        }
+      },
+      "bronze": {
+        "name": "Plano Bronze",
+        "limit": "5 perguntas/dia",
+        "features": {
+          "questionsPerDay": "5 perguntas por dia",
+          "prioritySupport": "Suporte prioritário",
+          "emailNotifications": "Notificações por e-mail"
+        }
+      },
+      "silver": {
+        "name": "Plano Prata",
+        "limit": "10 perguntas/dia",
+        "features": {
+          "questionsPerDay": "10 perguntas por dia",
+          "premiumSupport": "Suporte premium",
+          "advancedAnalytics": "Análises avançadas"
+        }
+      },
+      "gold": {
+        "name": "Plano Ouro",
+        "limit": "Perguntas ilimitadas",
+        "features": {
+          "unlimitedQuestions": "Perguntas ilimitadas",
+          "vipSupport": "Suporte VIP",
+          "allPremiumFeatures": "Todos os recursos premium"
+        }
+      }
+    },
+    "buttons": {
+      "processing": "Processando...",
+      "paymentWindowClosed": "Janela de Pagamento Fechada",
+      "upgradePlan": "Atualizar"
+    },
+    "paymentWindow": {
+      "open": "💳 Janela de Pagamento Aberta (10:00 AM - 11:00 AM IST)",
+      "closed": "⏰ Janela de Pagamento Fechada"
+    },
+    "status": {
+      "currentPlan": "💡 Plano atual"
+    },
+    "messages": {
+      "freePlanNoPayment": "Plano gratuito não requer pagamento!",
+      "alreadyOnPlan": "Você já está neste plano!",
+      "paymentWindowClosed": "Pagamentos permitidos apenas entre 10:00 AM e 11:00 AM IST.",
+      "failedToCreateOrder": "Falha ao criar ordem de pagamento"
+    }
   },
   "messages": {
     "languageChanged": "Idioma alterado com sucesso",

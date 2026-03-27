@@ -7,9 +7,12 @@ import Mainlayout from "../../layout/Mainlayout";
 import axiosInstance from "../../lib/axiosinstance";
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import { useAuth } from "../../lib/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export default function FriendsPage() {
   const { user } = useAuth();
+  const { t } = useTranslation();
+
   const [friends, setFriends] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,15 +52,17 @@ export default function FriendsPage() {
       <div className="max-w-4xl">
         <h1 className="text-xl lg:text-2xl font-semibold mb-6 flex items-center gap-2">
           <Users className="w-6 h-6" />
-          My Friends ({friends.length})
+          {t('friends.title', { count: friends.length })}
         </h1>
+        
         <p className="text-gray-600 mb-6">
-          Add friends from the{" "}
-          <Link href="/users/users" className="text-blue-600 hover:underline">
-            Users
-          </Link>{" "}
-          page to unlock posting in Public Space.
+          Add friends from the Users page to unlock posting in Public Space.
+          <Link href="/users/users" className="text-blue-600 hover:underline ml-1">
+            Find users
+          </Link>
+          {" "}to add as friends.
         </p>
+        
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500" />
@@ -66,9 +71,9 @@ export default function FriendsPage() {
           <div className="text-center text-gray-500 py-12 border border-dashed border-gray-300 rounded-lg">
             No friends yet.{" "}
             <Link href="/users/users" className="text-blue-600 hover:underline">
-              Find users to add as friends
-            </Link>
-            .
+              Find users
+            </Link>{" "}
+            to add as friends.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

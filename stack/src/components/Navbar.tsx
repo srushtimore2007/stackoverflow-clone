@@ -6,11 +6,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useRouter } from "next/navigation";
+import { useTranslationManager } from "../hooks/useTranslationManager";
 
 const Navbar = ({ handleslidein }: any) => {
   const { user, logout } = useAuth();
   const [hasMounted, setHasMounted] = useState(false);
   const router = useRouter();
+  const { t } = useTranslationManager();
 
   useEffect(() => {
     setHasMounted(true);
@@ -41,7 +43,7 @@ const Navbar = ({ handleslidein }: any) => {
           </Link>
 
           <div className="hidden sm:flex gap-1">
-            {["About", "Products", "For Teams"].map((item) => (
+            {[t('navbar.about'), t('navbar.products'), t('navbar.forTeams')].map((item) => (
               <Link
                 key={item}
                 href="/"
@@ -56,7 +58,7 @@ const Navbar = ({ handleslidein }: any) => {
           <form className="hidden lg:block flex-grow relative px-3">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t('navbar.search')}
               className="w-full max-w-[600px] pl-9 pr-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
             />
             <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-600" />
@@ -73,14 +75,14 @@ const Navbar = ({ handleslidein }: any) => {
                 href="/auth/login"
                 className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
               >
-                Log in
+                {t('navbar.login')}
               </Link>
 
               <Link
                 href="/signup/signup"
                 className="text-sm font-medium text-white bg-green-500 hover:bg-green-600 px-4 py-1.5 rounded transition"
               >
-                Sign up
+                {t('navbar.signup')}
               </Link>
             </>
           ) : (
@@ -98,7 +100,7 @@ const Navbar = ({ handleslidein }: any) => {
                 onClick={handlelogout}
                 className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
               >
-                Log out
+                {t('navbar.logout')}
               </button>
             </>
           )}

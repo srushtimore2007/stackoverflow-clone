@@ -1,5 +1,5 @@
 'use client';
-import { useTranslation } from 'react-i18next';
+import { useTranslationManager } from '../../hooks/useTranslationManager';
 import Link from "next/link";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
 export default function SignUpPage() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslationManager();
   const router = useRouter();
 
   // ✅ FIXED HERE
@@ -38,7 +38,7 @@ export default function SignUpPage() {
     e.preventDefault();
 
     if (!form.name || !form.email || !form.password) {
-      toast.error('All fields are required');
+      toast.error(t('signup.allFieldsRequired'));
       return;
     }
 
@@ -46,16 +46,16 @@ export default function SignUpPage() {
       // ✅ FIXED HERE
       await signup(form);
 
-      toast.success('Account created successfully');
+      toast.success(t('signup.signupSuccess'));
 
       router.push("/");
     } catch (error: any) {
-      toast.error(error.message || 'Something went wrong');
+      toast.error(error.message || t('signup.signupFailed'));
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div key={locale} className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6 lg:mb-8">
           <Link href="/" className="flex items-center justify-center mb-4">
@@ -74,10 +74,10 @@ export default function SignUpPage() {
           <Card>
             <CardHeader className="space-y-1 text-center">
               <CardTitle className="text-xl lg:text-2xl">
-                Create account
+                {t('auth.signup.title')}
               </CardTitle>
               <CardDescription>
-                Join the community
+                {t('auth.signup.subtitle')}
               </CardDescription>
             </CardHeader>
 
@@ -108,57 +108,58 @@ export default function SignUpPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="name">Display name</Label>
+                <Label htmlFor="name">{t('auth.signup.name')}</Label>
                 <Input
                   id="name"
-                  placeholder={t('login.emailPlaceholder')}
+                  placeholder={t('signup.namePlaceholder')}
                   value={form.name}
                   onChange={handleChange}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.signup.email')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t('login.emailPlaceholder')}
+                  placeholder={t('signup.emailPlaceholder')}
                   value={form.email}
                   onChange={handleChange}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('auth.signup.password')}</Label>
                 <Input
                   id="password"
                   type="password"
+                  placeholder={t('signup.passwordPlaceholder')}
                   value={form.password}
                   onChange={handleChange}
                 />
                 <p className="text-xs text-gray-600">
-                  Password must be at least 8 characters
+                  {t('signup.passwordMinLength')}
                 </p>
               </div>
 
               <div className="flex items-start space-x-2">
                 <Checkbox id="terms" className="mt-1" />
                 <Label htmlFor="terms" className="text-sm">
-                  I agree to the Terms & Privacy Policy
+                  {t('auth.signup.agreeTermsPrivacy')}
                 </Label>
               </div>
 
               <Button type="submit" className="w-full bg-blue-600">
-                {loading ? 'Loading...' : 'Sign up'}
+                {loading ? t('signup.signingUp') : t('auth.signup.button')}
               </Button>
 
               <div className="text-center text-sm">
-                Already have an account?{' '}
+                {t('auth.signup.haveAccount')}{' '}
                 <Link
                   href="/auth/login"
                   className="text-blue-600 hover:underline"
                 >
-                  Log in
+                  {t('auth.signup.login')}
                 </Link>
               </div>
             </CardContent>

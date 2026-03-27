@@ -11,8 +11,10 @@ import {
   immediateUpgradeSubscription,
 } from '../services/subscriptionService';
 import RazorpayPayment from './RazorpayPayment';
+import { useTranslationManager } from '../hooks/useTranslationManager';
 
 const SubscriptionPlans: React.FC = () => {
+  const { t } = useTranslationManager();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [currentPlan, setCurrentPlan] = useState<PlanType>('FREE');
@@ -28,31 +30,47 @@ const SubscriptionPlans: React.FC = () => {
   const plans: Plan[] = [
     {
       id: 'FREE',
-      name: 'Free Plan',
+      name: t('subscription.plans.free.name'),
       price: 0,
-      limit: '1 question/day',
-      features: ['1 question per day', 'Basic support', 'Community access'],
+      limit: t('subscription.plans.free.limit'),
+      features: [
+        t('subscription.plans.free.features.questionPerDay'),
+        t('subscription.plans.free.features.basicSupport'),
+        t('subscription.plans.free.features.communityAccess')
+      ],
     },
     {
       id: 'BRONZE',
-      name: 'Bronze Plan',
+      name: t('subscription.plans.bronze.name'),
       price: 100,
-      limit: '5 questions/day',
-      features: ['5 questions per day', 'Priority support', 'Email notifications'],
+      limit: t('subscription.plans.bronze.limit'),
+      features: [
+        t('subscription.plans.bronze.features.questionsPerDay'),
+        t('subscription.plans.bronze.features.prioritySupport'),
+        t('subscription.plans.bronze.features.emailNotifications')
+      ],
     },
     {
       id: 'SILVER',
-      name: 'Silver Plan',
+      name: t('subscription.plans.silver.name'),
       price: 300,
-      limit: '10 questions/day',
-      features: ['10 questions per day', 'Premium support', 'Advanced analytics'],
+      limit: t('subscription.plans.silver.limit'),
+      features: [
+        t('subscription.plans.silver.features.questionsPerDay'),
+        t('subscription.plans.silver.features.premiumSupport'),
+        t('subscription.plans.silver.features.advancedAnalytics')
+      ],
     },
     {
       id: 'GOLD',
-      name: 'Gold Plan',
+      name: t('subscription.plans.gold.name'),
       price: 1000,
-      limit: 'Unlimited questions',
-      features: ['Unlimited questions', 'VIP support', 'All premium features'],
+      limit: t('subscription.plans.gold.limit'),
+      features: [
+        t('subscription.plans.gold.features.unlimitedQuestions'),
+        t('subscription.plans.gold.features.vipSupport'),
+        t('subscription.plans.gold.features.allPremiumFeatures')
+      ],
     },
   ];
 
@@ -102,18 +120,18 @@ const SubscriptionPlans: React.FC = () => {
 
   const handleSubscribe = async (planId: PlanType): Promise<void> => {
     if (planId === 'FREE') {
-      toast.info('Free plan requires no payment!');
+      toast.info(t('subscription.messages.freePlanNoPayment'));
       return;
     }
 
     if (planId === currentPlan) {
-      toast.info('You are already on this plan!');
+      toast.info(t('subscription.messages.alreadyOnPlan'));
       return;
     }
 
     // Check if current time is within payment window (10:00 AM - 11:00 AM IST)
     if (!isWithinPaymentWindow()) {
-      toast.error('Payments are allowed only between 10:00 AM and 11:00 AM IST.');
+      toast.error(t('subscription.messages.paymentWindowClosed'));
       return;
     }
 
@@ -141,7 +159,7 @@ const SubscriptionPlans: React.FC = () => {
         }
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create payment order';
+      const errorMessage = err instanceof Error ? err.message : t('subscription.messages.failedToCreateOrder');
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -216,7 +234,7 @@ const SubscriptionPlans: React.FC = () => {
 
   return (
     <div className="subscription-plans">
-      <h1>Choose Your Plan</h1>
+      <h1>{t('subscription.title')}</h1>
       {error && <div className="error-message">{error}</div>}
 
       <div className="plans-grid">
@@ -225,7 +243,7 @@ const SubscriptionPlans: React.FC = () => {
             <h3>{plan.name}</h3>
             <div className="price">
               ₹{plan.price}
-              <span>/month</span>
+              <span>{t('subscription.perMonth')}</span>
             </div>
             <div className="limit">{plan.limit}</div>
 
@@ -240,7 +258,7 @@ const SubscriptionPlans: React.FC = () => {
               disabled={loading || !isWithinPaymentWindow()}
               className={currentPlan === plan.id ? 'current-plan' : ''}
             >
-              {loading ? 'Processing...' : !isWithinPaymentWindow() ? 'Payment Window Closed' : 'Upgrade Plan'}
+              {loading ? t('subscription.buttons.processing') : !isWithinPaymentWindow() ? t('subscription.buttons.paymentWindowClosed') : t('subscription.buttons.upgradePlan')}
             </button>
 
             {/* Payment window status indicator */}
@@ -251,14 +269,14 @@ const SubscriptionPlans: React.FC = () => {
                 color: isWithinPaymentWindow() ? '#28a745' : '#dc3545',
                 textAlign: 'center'
               }}>
-                {isWithinPaymentWindow() ? '💳 Payment Window Open (10:00 AM - 11:00 AM IST)' : '⏰ Payment Window Closed'}
+                {isWithinPaymentWindow() ? t('subscription.paymentWindow.open') : t('subscription.paymentWindow.closed')}
               </div>
             )}
 
             {/* Upgrade indicator - shows when user is on current plan */}
             {currentPlan === plan.id && (
               <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#666' }}>
-                💡 Current Plan
+                {t('subscription.status.currentPlan')}
               </div>
             )}
           </div>

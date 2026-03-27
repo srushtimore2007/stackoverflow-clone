@@ -773,6 +773,44 @@ export const sendEmailOtp = async (req, res) => {
   }
 };
 
+/* ========================= GET CURRENT USER ========================= */
+export const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.userid; // set by auth middleware
+
+    if (!userId) {
+      return res.status(401).json({ 
+        success: false, 
+        message: "Unauthorized - No user ID found" 
+      });
+    }
+
+    const currentUser = await user
+      .findById(userId)
+      .select("-password -otp -otpExpiry -languageRequested -forgotPasswordAt")
+      .populate("friends", "name email joinDate")
+      .lean();
+
+    if (!currentUser) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found" 
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: currentUser
+    });
+  } catch (error) {
+    console.error("[getCurrentUser]", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Something went wrong" 
+    });
+  }
+};
+
 /* ========================= EMAIL OTP: VERIFY ========================= */
 /**
  * POST /api/verify-email-otp

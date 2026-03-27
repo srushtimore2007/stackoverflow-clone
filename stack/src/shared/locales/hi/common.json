@@ -12,14 +12,37 @@
     "currentLanguage": "वर्तमान भाषा"
   },
   "otp": {
-    "title": "OTP सत्यापित करें",
-    "emailMessage": "आपके ईमेल पते पर एक OTP भेजा गया है",
-    "mobileMessage": "आपके मोबाइल नंबर पर एक OTP भेजा गया है",
-    "enterOTP": "OTP दर्ज करें",
+    "title": "ओटीपी सत्यापित करें",
+    "emailMessage": "आपके ईमेल पते पर एक ओटीपी भेजा गया है",
+    "mobileMessage": "आपके मोबाइल नंबर पर एक ओटीपी भेजा गया है",
+    "enterOTP": "ओटीपी दर्ज करें",
     "verify": "सत्यापित करें",
-    "resend": "OTP पुनः भेजें",
+    "resend": "ओटीपी पुनः भेजें",
     "expiresIn": "{{time}} सेकंड में समाप्त हो जाएगा",
-    "attemptsRemaining": "{{count}} प्रयास शेष हैं"
+    "attemptsRemaining": "{{count}} प्रयास शेष हैं",
+    "verifyTitle": "ओटीपी सत्यापित करें",
+    "subtitle": "अपने ईमेल/फोन पर भेजे गए ओटीपी को दर्ज करें",
+    "otpLabel": "वन-टाइम पासवर्ड (ओटीपी)",
+    "placeholder": "000000",
+    "verifying": "सत्यापित हो रहा है...",
+    "invalid": "अमान्य ओटीपी",
+    "emailRequired": "सत्यापन के लिए ईमेल आवश्यक है",
+    "success": "ओटीपी सफलतापूर्वक भेजा गया",
+    "loginSuccess": "लॉगिन सफल!",
+    "verificationFailed": "ओटीपी सत्यापन विफल",
+    "resendMessage": "कृपया नया ओटीपी मांगने के लिए लॉगिन पेज पर वापस जाएं",
+    "backToLogin": "लॉगिन पर वापस जाएं",
+    "send": "ओटीपी भेजें",
+    "sending": "भेज रहे हैं...",
+    "enterOtp": "ओटीपी दर्ज करें",
+    "resendIn": "पुनः भेजें",
+    "verified": "ओटीपी सफलतापूर्वक सत्यापित",
+    "failedToSend": "ओटीपी भेजने में विफल",
+    "failedToVerify": "ओटीपी सत्यापन में विफल",
+    "failedToResend": "ओटीपी पुनः भेजने में विफल",
+    "resent": "ओटीपी सफलतापूर्वक पुनः भेजा गया",
+    "useOtpToVerify": "अपना मोबाइल नंबर सत्यापित करने के लिए इस ओटीपी का उपयोग करें",
+    "expired": "ओटीपी समाप्त हो गया"
   },
   "forgotPassword": {
     "title": "पासवर्ड भूल गए",
@@ -39,23 +62,33 @@
     "userNotFound": "उपयोगकर्ता नहीं मिला",
     "rateLimitExceeded": "आप दिन में केवल एक बार ही पासवर्ड रीसेट का अनुरोध कर सकते हैं",
     "successMessage": "आपके ईमेल पर नया पासवर्ड भेज दिया गया है।",
-    "securityNotice": "🔒 सुरक्षा सूचना",
+    "securityNotice": " सुरक्षा सूचना",
     "securityNoticeText": "यदि आपने यह पासवर्ड रीसेट अनुरोध नहीं किया है, तो कृपया तुरंत समर्थन से संपर्क करें।"
   },
   "home": {
-    "topQuestions": "शीर्ष प्रश्न",
+    "title": "शीर्ष प्रश्न",
     "askQuestion": "प्रश्न पूछें",
     "questions": "प्रश्न",
     "newest": "नवीनतम",
     "active": "सक्रिय",
     "bountied": "बाउंटी",
     "unanswered": "उत्तर नहीं दिए गए",
-    "more": "अधिक",
-    "filter": "फ़िल्टर",
+    "more": "अधिक ",
+    "filter": " फ़िल्टर",
     "votes": "वोट",
     "answer": "उत्तर",
     "answers": "उत्तर",
-    "asked": "पूछा गया"
+    "noQuestions": "कोई प्रश्न नहीं मिला",
+    "asked": "पूछा गया",
+    "heroTitle": "अपने प्रश्नों के उत्तर प्राप्त करें",
+    "heroSubtitle": "डेवलपर्स के हमारे समुदाय में शामिल हों और ज्ञान साझा करें",
+    "searchPlaceholder": "प्रश्न खोजें...",
+    "recentQuestions": "हाल के प्रश्न",
+    "askFirstQuestion": "पहला प्रश्न पूछें",
+    "filterByTags": "टैग से फ़िल्टर करें",
+    "sortBy": "इसके अनुसार क्रमबद्ध करें",
+    "oldest": "सबसे पुराना",
+    "mostPopular": "सबसे लोकप्रिय"
   },
   "navbar": {
     "about": "के बारे में",
@@ -83,6 +116,52 @@
     "articles": "लेख",
     "companies": "कंपनियां"
   },
+  "users": {
+    "title": "उपयोगकर्ता — सार्वजनिक स्थान में पोस्ट करने के लिए दोस्त खोजें",
+    "searchPlaceholder": "नाम या ईमेल से खोजें",
+    "noUsersFound": "कोई उपयोगकर्ता नहीं मिला।",
+    "addFriend": "दोस्त जोड़ें",
+    "friends": "दोस्त",
+    "adding": "जोड़ रहे हैं...",
+    "joined": "शामिल हुए",
+    "friendAdded": "दोस्त जोड़ा गया!",
+    "friendAddFailed": "दोस्त जोड़ने में विफल",
+    "loginToAddFriends": "दोस्त जोड़ने के लिए लॉग इन करें"
+  },
+  "friends": {
+    "title": "मेरे दोस्त ({{count}})",
+    "subtitle": "सार्वजनिक स्थान में पोस्ट करने को अनलॉक करने के लिए उपयोगकर्ता पृष्ठ से दोस्त जोड़ें।",
+    "noFriends": "अभी तक कोई दोस्त नहीं।",
+    "findUsers": "दोस्त के रूप में जोड़ने के लिए उपयोगकर्ता खोजें",
+    "loginToSeeFriends": "अपने दोस्त देखने के लिए लॉग इन करें।",
+    "joined": "शामिल हुए"
+  },
+  "loginHistory": {
+    "title": "लॉग इन इतिहास",
+    "subtitle": "अपने हाल के लॉग इन देखें",
+    "noHistory": "कोई लॉग इन इतिहास उपलब्ध नहीं है।",
+    "loginTime": "लॉग इन समय",
+    "ipAddress": "IP पता",
+    "device": "डिवाइस",
+    "location": "स्थान",
+    "status": "स्थिति",
+    "successful": "सफल",
+    "failed": "विफल",
+    "unknown": "अज्ञात"
+  },
+  "feed": {
+    "title": "सार्वजनिक स्थान",
+    "loginToPost": "पोस्ट बनाने के लिए लॉग इन करें।",
+    "noPosts": "अभी तक कोई पोस्ट नहीं। पहले पोस्ट करें!",
+    "loading": "पोस्ट लोड हो रही हैं...",
+    "addComment": "एक टिप्पणी जोड़ें...",
+    "comment": "टिप्पणी",
+    "like": "पसंद",
+    "share": "साझा करें",
+    "postedBy": "द्वारा पोस्ट किया गया",
+    "comments": "टिप्पणियाँ",
+    "replies": "जवाब"
+  },
   "askQuestion": {
     "title": "सार्वजिक प्रश्न पूछें",
     "pleaseLogin": "प्रश्न पूछने के लिए लॉग इन करें",
@@ -102,6 +181,105 @@
     "tagsHelp": "यह बताने के लिए 5 तक टैग जोड़ें कि आपका प्रश्न किस बारे में है।",
     "tagPlaceholder": "उदाहरण: javascript react nextjs",
     "reviewQuestion": "अपना प्रश्न समीक्षण करें"
+  },
+  "auth": {
+    "login": {
+      "title": "अपने खाते में लॉग इन करें",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "button": "लॉग इन",
+      "forgotPassword": "पासवर्ड भूल गए?",
+      "noAccount": "आपके पास खाता नहीं है?",
+      "signup": "साइन अप"
+    },
+    "signup": {
+      "title": "अपना खाता बनाएं",
+      "name": "नाम",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि करें",
+      "button": "साइन अप",
+      "haveAccount": "आपके पास खाता है?",
+      "login": "लॉग इन"
+    },
+    "errors": {
+      "invalidCredentials": "अमान्य क्रेडेंशियल",
+      "requiredField": "यह फ़ील्ड आवश्यक है",
+      "passwordMismatch": "पासवर्ड मेल नहीं खाते"
+    }
+  },
+  "rightSidebar": {
+    "blogTitle": "ओवरफ्लो ब्लॉग",
+    "blogPost1": "स्टैक ओवरफ्लो का एक नया युग",
+    "blogPost2": "क्या आपकी पसंदिदा फिल्म भाषा बदलने की तकनॉलॉजी बदल रही है?",
+    "metaTitle": "मेटा पर विशेष",
+    "metaPost1": "जून 2025 कमुनिटी अस्क प्रश्नों के परिणाम",
+    "metaPost2": "क्या आप हमारी नया विजुअल पहचान में मददेंगे?",
+    "policy": "कस्टम फ़िल्टर",
+    "customFilters": "एक कस्टम फ़िल्टर बनाएं",
+    "watchedTags": "देखी गई टैग",
+    "watchTagsDesc": "अपने प्रश्नों की सूची को व्यवस्थित करने के लिए टैग देखें।",
+    "watchTag": "एक टैग देखें"
+  },
+  "subscription": {
+    "title": "अपनी योजना चुनें",
+    "perMonth": "/महीना",
+    "plans": {
+      "free": {
+        "name": "मुफ्त प्लान",
+        "limit": "1 प्रश्न/दिन",
+        "features": {
+          "questionPerDay": "1 प्रश्न प्रति दिन",
+          "basicSupport": "बेसिक समर्थन",
+          "communityAccess": "कम्युनिटी पहुंच"
+        }
+      },
+      "bronze": {
+        "name": "ब्रॉन्ज प्लान",
+        "limit": "5 प्रश्न/दिन",
+        "features": {
+          "questionsPerDay": "5 प्रश्न प्रति दिन",
+          "prioritySupport": "प्राथमिकता सहायता",
+          "emailNotifications": "ईमेल सूचनाएं"
+        }
+      },
+      "silver": {
+        "name": "सिल्वर प्लान",
+        "limit": "10 प्रश्न/दिन",
+        "features": {
+          "questionsPerDay": "10 प्रश्न प्रति दिन",
+          "premiumSupport": "प्रीमियम समर्थन",
+          "advancedAnalytics": "उन्नत विश्लेषण"
+        }
+      },
+      "gold": {
+        "name": "गोल्ड प्लान",
+        "limit": "असीमित प्रश्न",
+        "features": {
+          "unlimitedQuestions": "असीमित प्रश्न",
+          "vipSupport": "VIP समर्थन",
+          "allPremiumFeatures": "सभी प्रीमियम विशेषताएं"
+        }
+      }
+    },
+    "buttons": {
+      "processing": "प्रोसेसिंग...",
+      "paymentWindowClosed": "भुगतान विंडो बंद",
+      "upgradePlan": "अपग्रेड करें"
+    },
+    "paymentWindow": {
+      "open": "💳 भुगतान विंडो खुली (10:00 AM - 11:00 AM IST)",
+      "closed": "⏰ भुगतान विंडो बंद"
+    },
+    "status": {
+      "currentPlan": "💡 वर्तमान योजना"
+    },
+    "messages": {
+      "freePlanNoPayment": "मुफ्त प्लान के लिए कोई भुगतान आवश्यक नहीं!",
+      "alreadyOnPlan": "आप पहले से ही इस प्लान पर हैं!",
+      "paymentWindowClosed": "भुगतान केवल 10:00 AM और 11:00 AM IST के बीच अनुमत है।",
+      "failedToCreateOrder": "भुगतान ऑर्डर बनाने में विफल"
+    }
   },
   "messages": {
     "languageChanged": "भाषा सफलतापूर्वक बदल गई",

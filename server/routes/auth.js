@@ -5,12 +5,13 @@ import bcrypt from "bcryptjs";
 import auth from "../middleware/auth.js";
 import deviceDetection from "../middleware/deviceDetection.js";
 import { registerUser } from "../controller/userController.js";
-import { getFriendList,sendEmailOtp,verifyEmailOtp, verifyLoginOtp } from "../controller/auth.js";
+import { getFriendList,sendEmailOtp,verifyEmailOtp, verifyLoginOtp, getCurrentUser } from "../controller/auth.js";
 import { Signup, Login, getUserById, searchUsers } from "../controller/auth.js";
 
 const router = express.Router();
 
 router.get("/user/:id", getUserById);
+router.get("/current-user", auth, getCurrentUser);
 router.get("/friends", auth, getFriendList);
 router.post("/login", deviceDetection, Login);
 router.post("/signup", Signup);

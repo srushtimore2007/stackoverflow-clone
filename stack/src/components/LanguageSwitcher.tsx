@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTranslation } from '../contexts/TranslationContext';
+import { useLanguage } from '../contexts/language-context';
+import { useTranslationManager } from '../hooks/useTranslationManager';
 import LanguageVerificationModal from './LanguageVerificationModal';
 
 interface LanguageSwitcherProps {
@@ -16,17 +17,28 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   userEmail
 }) => {
   const { 
-    currentLanguage, 
-    supportedLanguages, 
-    setLanguage, 
-    isLoading
-  } = useTranslation();
+    locale: currentLanguage, 
+    setLocale, 
+    isChangingLanguage: isLoading 
+  } = useLanguage();
+  
+  const { t } = useTranslationManager();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [pendingLanguage, setPendingLanguage] = useState<string>('');
 
-  // Language OTP requirements
+  // Supported languages - using the same as in i18n config
+  const supportedLanguages = {
+    en: { name: 'English', code: 'en' },
+    hi: { name: 'Hindi', code: 'hi' },
+    es: { name: 'Spanish', code: 'es' },
+    pt: { name: 'Portuguese', code: 'pt' },
+    zh: { name: 'Chinese', code: 'zh' },
+    fr: { name: 'French', code: 'fr' },
+  };
+
+  // Language OTP requirements - French uses email, others use mobile
   const languageRequirements: Record<string, { required: boolean; type: 'email' | 'phone' | null }> = {
     en: { required: false, type: null },
     fr: { required: true, type: 'email' },
@@ -36,28 +48,37 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     zh: { required: true, type: 'phone' }
   };
 
-  const handleLanguageSelect = (languageCode: string) => {
+  const handleLanguageSelect = async (languageCode: string) => {
     const requirements = languageRequirements[languageCode];
     
     if (requirements.required) {
-      // Show verification modal
+      // Show verification modal for non-English languages
       setPendingLanguage(languageCode);
       setShowVerificationModal(true);
       setIsDropdownOpen(false);
     } else {
-      // Switch immediately (English)
-      setLanguage(languageCode);
-      onLanguageChange?.(languageCode);
-      setIsDropdownOpen(false);
+      // Switch immediately for English
+      try {
+        await setLocale(languageCode as any);
+        onLanguageChange?.(languageCode);
+        setIsDropdownOpen(false);
+      } catch (error) {
+        console.error('Failed to change language:', error);
+      }
     }
   };
 
-  const handleVerificationSuccess = () => {
-    // Switch to pending language after successful verification
-    setLanguage(pendingLanguage);
-    onLanguageChange?.(pendingLanguage);
-    setPendingLanguage('');
-    setShowVerificationModal(false);
+  const handleVerificationSuccess = async () => {
+    try {
+      // Switch to pending language after successful verification
+      await setLocale(pendingLanguage as any);
+      onLanguageChange?.(pendingLanguage);
+      setPendingLanguage('');
+      setShowVerificationModal(false);
+      setIsDropdownOpen(false);
+    } catch (error) {
+      console.error('Failed to change language after verification:', error);
+    }
   };
 
   return (
@@ -157,7 +178,6 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           </div>
         </div>
       )}
-
 
       {/* Verification Modal */}
       <LanguageVerificationModal

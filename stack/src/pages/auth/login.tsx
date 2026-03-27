@@ -19,11 +19,11 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../lib/AuthContext";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useTranslation } from "react-i18next";
+import { useTranslationManager } from "../../hooks/useTranslationManager";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslationManager();
 
   // ✅ FIXED HERE
   const { login, loading } = useAuth();
@@ -76,7 +76,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div key={locale} className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6 lg:mb-8">
           <Link href="/" className="flex items-center justify-center mb-4">
@@ -95,30 +95,31 @@ const LoginPage = () => {
           <Card>
             <CardHeader className="space-y-1 text-center">
               <CardTitle className="text-xl lg:text-2xl">
-                {t('login.title')}
+                {t('auth.login.title')}
               </CardTitle>
               <CardDescription>
-                {t('login.subtitle')}
+                {t('auth.login.subtitle')}
               </CardDescription>
             </CardHeader>
 
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">{t('login.emailLabel')}</Label>
+                <Label htmlFor="email">{t('auth.login.email')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder={t('login.emailPlaceholder')}
                   value={form.email}
                   onChange={handleChange}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">{t('login.passwordLabel')}</Label>
+                <Label htmlFor="password">{t('auth.login.password')}</Label>
                 <Input
                   id="password"
                   type="password"
+                  placeholder={t('login.passwordPlaceholder')}
                   value={form.password}
                   onChange={handleChange}
                 />
@@ -129,7 +130,7 @@ const LoginPage = () => {
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={loading}
               >
-                {loading ? t('login.loggingIn') : t('login.loginButton')}
+                {loading ? t('login.loggingIn') : t('auth.login.button')}
               </Button>
 
               <div className="text-center text-sm mt-2">
@@ -137,17 +138,17 @@ const LoginPage = () => {
                   href="/auth/forgotpassword"
                   className="text-blue-600 hover:underline"
                 >
-                  {t('login.forgotPassword')}
+                  {t('auth.login.forgotPassword')}
                 </Link>
               </div>
 
               <div className="text-center text-sm mt-2">
-                {t('login.noAccount')}{' '}
+                {t('auth.login.noAccount')}{' '}
                 <Link
                   href="/signup/signup"
                   className="text-blue-600 hover:underline"
                 >
-                  {t('login.signUp')}
+                  {t('auth.login.signup')}
                 </Link>
               </div>
             </CardContent>

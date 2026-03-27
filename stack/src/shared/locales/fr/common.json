@@ -1,7 +1,7 @@
 {
   "welcome": "Bienvenue",
   "logout": "Déconnexion",
-  "submit": "Envoyer",
+  "submit": "Soumettre",
   "cancel": "Annuler",
   "loading": "Chargement...",
   "confirm": "Confirmer",
@@ -19,7 +19,28 @@
     "verify": "Vérifier",
     "resend": "Renvoyer OTP",
     "expiresIn": "Expire dans {{time}} secondes",
-    "attemptsRemaining": "{{count}} tentatives restantes"
+    "attemptsRemaining": "{{count}} tentatives restantes",
+    "verifyTitle": "Vérifiez Votre Connexion",
+    "subtitle": "Entrez le OTP à 6 chiffres envoyé à votre e-mail",
+    "otpLabel": "Mot de Passe à Usage Unique (OTP)",
+    "placeholder": "000000",
+    "verifying": "Vérification...",
+    "invalid": "Veuillez entrer un OTP valide à 6 chiffres",
+    "emailRequired": "L'e-mail est requis pour la vérification",
+    "success": "OTP vérifié avec succès! Redirection...",
+    "loginSuccess": "Connexion réussie!",
+    "verificationFailed": "Échec de la vérification OTP",
+    "resendMessage": "Veuillez retourner à la page de connexion pour demander un nouveau OTP",
+    "backToLogin": "Retour à la Connexion"
+  },
+  "login": {
+    "title": "Connectez-vous à votre compte",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "button": "Se connecter",
+    "forgotPassword": "Mot de passe oublié?",
+    "noAccount": "Vous n'avez pas de compte?",
+    "signup": "S'inscrire"
   },
   "forgotPassword": {
     "title": "Mot de passe oublié",
@@ -32,39 +53,41 @@
     "emailPlaceholder": "Adresse e-mail",
     "phonePlaceholder": "Numéro de téléphone",
     "resetButton": "Réinitialiser le mot de passe",
-    "processing": "Traitement en cours...",
-    "backToLogin": "← Retour à la connexion",
-    "emptyIdentifier": "Veuillez entrer votre e-mail ou numéro de téléphone",
-    "networkError": "Erreur réseau. Veuillez réessayer.",
-    "userNotFound": "Utilisateur non trouvé",
-    "rateLimitExceeded": "Vous ne pouvez demander la réinitialisation du mot de passe qu'une fois par jour",
-    "successMessage": "Un nouveau mot de passe a été envoyé à votre e-mail.",
-    "securityNotice": " Avis de sécurité",
-    "securityNoticeText": "Si vous n'avez pas demandé cette réinitialisation de mot de passe, veuillez contacter le support immédiatement."
+    "resetting": "Réinitialisation...",
+    "resetSuccessful": "Lien de réinitialisation envoyé!",
+    "resetFailed": "Réinitialisation échouée. Réessayez.",
+    "backToLogin": "Retour à la connexion"
   },
-  "home": {
-    "topQuestions": "Questions Principales",
-    "askQuestion": "Poser une Question",
-    "questions": "questions",
-    "newest": "Plus Récentes",
-    "active": "Actives",
-    "bountied": "Avec Prime",
-    "unanswered": "Sans Réponse",
-    "more": "Plus",
-    "filter": "Filtrer",
-    "votes": "votes",
-    "answer": "réponse",
-    "answers": "réponses",
-    "asked": "a demandé"
+  "signup": {
+    "title": "Créer votre compte",
+    "subtitle": "Rejoignez notre communauté et commencez à partager des connaissances",
+    "nameLabel": "Nom complet",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Numéro de téléphone",
+    "passwordLabel": "Mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "namePlaceholder": "Entrez votre nom complet",
+    "emailPlaceholder": "exemple@domaine.com",
+    "phonePlaceholder": "+1 (555) 123-4567",
+    "passwordPlaceholder": "Créer un mot de passe fort",
+    "confirmPasswordPlaceholder": "Confirmer votre mot de passe",
+    "signUpButton": "S'inscrire",
+    "signingUp": "Création du compte...",
+    "alreadyHaveAccount": "Vous avez déjà un compte?",
+    "login": "Se connecter",
+    "signupSuccessful": "Compte créé avec succès!",
+    "signupFailed": "Création de compte échouée. Réessayez.",
+    "termsAndPrivacy": "En vous inscrivant, vous acceptez nos Conditions et Politique de confidentialité"
   },
   "navbar": {
-    "about": "À propos",
-    "products": "Produits",
-    "forTeams": "Pour les équipes",
-    "search": "Rechercher...",
-    "login": "Se connecter",
-    "signup": "S'inscrire",
-    "logout": "Se déconnecter"
+    "home": "Accueil",
+    "questions": "Questions",
+    "tags": "Étiquettes",
+    "users": "Utilisateurs",
+    "friends": "Amis",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
   },
   "sidebar": {
     "home": "Accueil",
@@ -75,36 +98,196 @@
     "users": "Utilisateurs",
     "friends": "Amis",
     "loginHistory": "Historique de connexion",
-    "publicSpace": "Espace public",
-    "saves": "Enregistrements",
+    "publicSpace": "Espace Public",
+    "saves": "Sauvegardes",
     "challenges": "Défis",
     "new": "NOUVEAU",
     "chat": "Chat",
     "articles": "Articles",
     "companies": "Entreprises"
   },
+  "users": {
+    "title": "Utilisateurs — Trouvez des amis pour poster dans l'Espace Public",
+    "searchPlaceholder": "Rechercher par nom ou e-mail",
+    "noUsersFound": "Aucun utilisateur trouvé.",
+    "addFriend": "Ajouter un Ami",
+    "friends": "Amis",
+    "adding": "Ajout...",
+    "joined": "Rejoint",
+    "friendAdded": "Ami ajouté!",
+    "friendAddFailed": "Échec de l'ajout d'ami",
+    "loginToAddFriends": "Connectez-vous pour ajouter des amis"
+  },
+  "friends": {
+    "title": "Mes Amis ({{count}})",
+    "subtitle": "Ajoutez des amis depuis la page Utilisateurs pour débloquer la publication dans l'Espace Public.",
+    "noFriends": "Aucun ami pour le moment.",
+    "findUsers": "Trouver des utilisateurs à ajouter comme amis",
+    "loginToSeeFriends": "Connectez-vous pour voir vos amis."
+  },
+  "loginHistory": {
+    "title": "Historique de connexion",
+    "subtitle": "Voir toutes vos activités de connexion récentes et informations sur les appareils",
+    "noHistory": "Aucun historique de connexion trouvé",
+    "loginTime": "Date et heure",
+    "ipAddress": "Adresse IP",
+    "device": "Appareil",
+    "browser": "Navigateur",
+    "operatingSystem": "Système d'exploitation",
+    "recentLogins": "Connexions récentes ({{count}})",
+    "loadFailed": "Échec du chargement de l'historique de connexion"
+  },
+  "feed": {
+    "title": "Espace Public",
+    "loginToPost": "Connectez-vous pour créer des publications.",
+    "noPosts": "Aucune publication pour le moment. Soyez le premier à publier!",
+    "loading": "Chargement des publications...",
+    "addComment": "Ajouter un commentaire...",
+    "comment": "Commenter",
+    "like": "Aimer",
+    "share": "Partager",
+    "postedBy": "Publié par",
+    "comments": "Commentaires",
+    "replies": "Réponses"
+  },
   "askQuestion": {
-    "title": "Poser une question publique",
-    "pleaseLogin": "Veuillez vous connecter pour poser une question",
-    "dailyLimit": "Limite quotidien de questions atteint pour votre plan. Veuillez mettre à niveau pour publier plus de questions.",
-    "questionPosted": "Question publiée avec succès",
-    "postFailed": "Échec de la publication de la question",
-    "somethingWrong": "Quelque chose s'est mal passé",
-    "limitReached": "Vous avez atteint votre limite quotidienne de questions ({{posted}}/{{limit}}).",
-    "upgradePlan": "Mettez à niveau votre plan pour publier plus de questions.",
-    "writingGood": "Rédiger une bonne question",
-    "titleHelp": "Soyez spécifique et imaginez que vous posez une question à une autre personne.",
-    "titlePlaceholder": "ex. Comment centrer un div en CSS?",
-    "problemDetails": "Quels sont les détails de votre problème?",
-    "problemHelp": "Introduisez le problème et développez ce que vous avez mis dans le titre. Minimum 20 caractères.",
-    "problemPlaceholder": "Décrivez votre problème en détail...",
-    "tags": "Étiquettes",
-    "tagsHelp": "Ajoutez jusqu'à 5 étiquettes pour décrire de quoi parle votre question.",
-    "tagPlaceholder": "ex. javascript react nextjs",
-    "reviewQuestion": "Reviser votre question"
+    "title": "Poser une Question",
+    "subtitle": "Partagez vos connaissances et aidez la communauté",
+    "titlePlaceholder": "Quelle est votre question?",
+    "detailsPlaceholder": "Incluez toutes les informations dont quelqu'un aurait besoin pour répondre à votre question",
+    "tagsPlaceholder": "Ajoutez jusqu'à 5 étiquettes pour décrire votre question",
+    "postButton": "Poster Votre Question",
+    "posting": "Publication...",
+    "questionPosted": "Question publiée avec succès!",
+    "postFailed": "Échec de la publication. Réessayez.",
+    "reviewQuestion": "Revoir votre question"
+  },
+  "home": {
+    "title": "Questions Principales",
+    "askQuestion": "Poser une Question",
+    "questions": "questions",
+    "newest": "Plus Récentes",
+    "active": "Actives",
+    "bountied": "Avec Récompense",
+    "unanswered": "Sans Réponse",
+    "more": "Plus ▼",
+    "filter": "🔍 Filtrer",
+    "votes": "votes",
+    "answer": "réponse",
+    "answers": "réponses",
+    "noQuestions": "Aucune question trouvée",
+    "asked": "Posé",
+    "heroTitle": "Obtenez des réponses à vos questions",
+    "heroSubtitle": "Rejoignez notre communauté de développeurs et partagez des connaissances",
+    "searchPlaceholder": "Rechercher des questions...",
+    "recentQuestions": "Questions Récentes",
+    "askFirstQuestion": "Poser la première question",
+    "filterByTags": "Filtrer par étiquettes",
+    "sortBy": "Trier par",
+    "oldest": "Plus ancien",
+    "mostPopular": "Plus populaire"
+  },
+  "auth": {
+    "login": {
+      "title": "Connectez-vous à votre compte",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "button": "Se connecter",
+      "forgotPassword": "Mot de passe oublié?",
+      "noAccount": "Vous n'avez pas de compte?",
+      "signup": "S'inscrire"
+    },
+    "signup": {
+      "title": "Créer un compte",
+      "name": "Nom",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "button": "S'inscrire",
+      "haveAccount": "Vous avez déjà un compte?",
+      "login": "Se connecter"
+    },
+    "errors": {
+      "invalidCredentials": "Identifiants invalides",
+      "requiredField": "Ce champ est obligatoire",
+      "passwordMismatch": "Les mots de passe ne correspondent pas"
+    }
+  },
+  "rightSidebar": {
+    "blogTitle": "Le Blog Overflow",
+    "blogPost1": "Une nouvelle ère de Stack Overflow",
+    "blogPost2": "Comment votre film préféré change-t-il la technologie d'apprentissage linguistique ?",
+    "metaTitle": "En vedette sur Meta",
+    "metaPost1": "Résultats du Sprint Communautaire de Juin 2025",
+    "metaPost2": "Nous aiderez-vous à construire notre nouvelle identité visuelle ?",
+    "policy": "Filtres Personnalisés",
+    "customFilters": "Créer un filtre personnalisé",
+    "watchedTags": "Étiquettes Surveillées",
+    "watchTagsDesc": "Surveillez les étiquettes pour organiser votre liste de questions.",
+    "watchTag": "Surveiller une étiquette"
+  },
+  "subscription": {
+    "title": "Choisissez Votre Plan",
+    "perMonth": "/mois",
+    "plans": {
+      "free": {
+        "name": "Plan Gratuit",
+        "limit": "1 question/jour",
+        "features": {
+          "questionPerDay": "1 question par jour",
+          "basicSupport": "Support de base",
+          "communityAccess": "Accès à la communauté"
+        }
+      },
+      "bronze": {
+        "name": "Plan Bronze",
+        "limit": "5 questions/jour",
+        "features": {
+          "questionsPerDay": "5 questions par jour",
+          "prioritySupport": "Support prioritaire",
+          "emailNotifications": "Notifications par e-mail"
+        }
+      },
+      "silver": {
+        "name": "Plan Argent",
+        "limit": "10 questions/jour",
+        "features": {
+          "questionsPerDay": "10 questions par jour",
+          "premiumSupport": "Support premium",
+          "advancedAnalytics": "Analyses avancées"
+        }
+      },
+      "gold": {
+        "name": "Plan Or",
+        "limit": "Questions illimitées",
+        "features": {
+          "unlimitedQuestions": "Questions illimitées",
+          "vipSupport": "Support VIP",
+          "allPremiumFeatures": "Toutes les fonctionnalités premium"
+        }
+      }
+    },
+    "buttons": {
+      "processing": "Traitement en cours...",
+      "paymentWindowClosed": "Fenêtre de Paiement Fermée",
+      "upgradePlan": "Mettre à Niveau le Plan"
+    },
+    "paymentWindow": {
+      "open": "💳 Fenêtre de Paiement Ouverte (10:00 AM - 11:00 AM IST)",
+      "closed": "⏰ Fenêtre de Paiement Fermée"
+    },
+    "status": {
+      "currentPlan": "💡 Plan Actuel"
+    },
+    "messages": {
+      "freePlanNoPayment": "Le plan gratuit ne nécessite pas de paiement !",
+      "alreadyOnPlan": "Vous êtes déjà sur ce plan !",
+      "paymentWindowClosed": "Les paiements ne sont autorisés qu'entre 10:00 AM et 11:00 AM IST.",
+      "failedToCreateOrder": "Échec de la création de la commande de paiement"
+    }
   },
   "messages": {
     "languageChanged": "Langue changée avec succès",
-    "verificationRequired": "Vérification requise pour changer la langue"
+    "verificationRequired": "Vérification requise pour changer de langue"
   }
 }
