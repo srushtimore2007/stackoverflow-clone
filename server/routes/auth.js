@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import auth from "../middleware/auth.js";
 import deviceDetection from "../middleware/deviceDetection.js";
 import { registerUser } from "../controller/userController.js";
-import { getFriendList,sendEmailOtp,verifyEmailOtp, verifyLoginOtp, getCurrentUser } from "../controller/auth.js";
+import { addFriend,getFriendList,sendEmailOtp,verifyEmailOtp, verifyLoginOtp, getCurrentUser } from "../controller/auth.js";
 import { Signup, Login, getUserById, searchUsers } from "../controller/auth.js";
 
 const router = express.Router();
@@ -16,8 +16,10 @@ router.get("/friends", auth, getFriendList);
 router.post("/login", deviceDetection, Login);
 router.post("/signup", Signup);
 router.post("/register", registerUser);
-router.post("/send-email-otp", sendEmailOtp);  // no auth
-router.post("/verify-login-otp", verifyLoginOtp);  // no auth
+router.post("/send-email-otp", sendEmailOtp);
+router.post("/verify-login-otp", verifyLoginOtp); 
+router.post("/add-friend", auth, addFriend);
+
 
 // Helper: generate only letters (a-z, A-Z) with proper mix
 function generatePassword(length = 8) {
