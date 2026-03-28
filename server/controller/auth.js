@@ -13,7 +13,7 @@ function generateSecurePassword() {
   const lower = "abcdefghijklmnopqrstuvwxyz";
   const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const all = lower + upper;
-  const len = 8 + Math.floor(Math.random() * 5); // 8 to 12
+  const len = 8 + Math.floor(Math.random() * 5); 
 
   let pwd = "";
   pwd += lower.charAt(Math.floor(Math.random() * lower.length));
@@ -21,19 +21,15 @@ function generateSecurePassword() {
   for (let i = 2; i < len; i++) {
     pwd += all.charAt(Math.floor(Math.random() * all.length));
   }
-  // Shuffle
-  return pwd
-    .split("")
-    .sort(() => Math.random() - 0.5)
-    .join("");
+  return pwd.split("").sort(() => Math.random() - 0.5).join("");
 }
 
 /* ========================= SIGNUP ========================= */
 export const Signup = async (req, res) => {
   const { name, email, password } = req.body;
   try {
-    const exisitinguser = await user.findOne({ email });
-    if (exisitinguser) {
+    const existinguser = await user.findOne({ email });
+    if (existinguser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
@@ -59,68 +55,21 @@ export const Signup = async (req, res) => {
 };
 
 /* ========================= LOGIN ========================= */
-// export const Login = async (req, res) => {
-//   const { email, password } = req.body;
-//   try {
-//     const exisitinguser = await user.findOne({ email });
-//     if (!exisitinguser) {
-//       return res.status(404).json({ message: "User does not exist" });
-//     }
-
-//     const ispasswordcrct = await bcrypt.compare(password, exisitinguser.password);
-//     if (!ispasswordcrct) {
-//       return res.status(400).json({ message: "Invalid password" });
-//     }
-
-//     const token = jwt.sign(
-//       { email: exisitinguser.email, id: exisitinguser._id },
-//       process.env.JWT_SECRET,
-//       { expiresIn: "1h" }
-//     );
-
-//     res.status(200).json({ data: exisitinguser, token });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: "Something went wrong" });
-//   }
-// };
-
-
 
 export const Login = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("EMAIL:", email);
-  console.log("PASSWORD:", password);
-
   try {
-    const exisitinguser = await user.findOne({ email });
+    const existingUser = await user.findOne({ email });
 
-    console.log("USER:", exisitinguser);
-
-    if (!exisitinguser) {
-      return res.status(404).json({
-        success: false,
-        requiresOTP: false,
-        message: "User does not exist"
-      });
+    if (!existingUser) {
+      return res.status(404).json({ success: false, message: "User does not exist" });
     }
 
-    const ispasswordcrct = await bcrypt.compare(
-      password,
-      exisitinguser.password
-    );
-
-    console.log("PASSWORD MATCH:", ispasswordcrct);
-    console.log("INPUT PASSWORD:", password);
-    console.log("STORED HASH:", exisitinguser.password.substring(0, 20) + "...");
+    const ispasswordcrct = await bcrypt.compare(password, existingUser.password);
 
     if (!ispasswordcrct) {
-      return res.status(400).json({
-        success: false,
-        requiresOTP: false,
-        message: "Invalid password"
-      });
+      return res.status(400).json({ success: false, message: "Invalid password" });
     }
 
     // ✅ Device detection (should be set by deviceDetection middleware)
@@ -134,227 +83,116 @@ export const Login = async (req, res) => {
     console.log("Device Info:", deviceInfo);
 
     // ✅ Conditional Access Rules
-    const browser = deviceInfo.browser || "Unknown";
-    const deviceType = deviceInfo.deviceType || "desktop"; // "mobile" or "desktop"
-    
-    // Browser-based OTP requirements
-    let requiresOTP = false;
-    if (browser.toLowerCase().includes("chrome")) {
-      requiresOTP = true; // Chrome requires OTP
-    } else if (browser.toLowerCase().includes("edge")) {
+    const browser = (deviceInfo.browser || "Unknown").toLowerCase();
+    const deviceType = (deviceInfo.deviceType || "desktop").toLowerCase(); // "mobile" or "desktop"
+
+    // let requiresOTP = !browser.includes("edge"); // Chrome/Others require OTP, Edge doesn't
+
+    if (browser.includes("edge")) {
       requiresOTP = false; // Edge allows direct login
     } else {
-      requiresOTP = true; // All other browsers require OTP
+      requiresOTP = true;  // Chrome and all others require OTP
     }
+    // OTP Rules
+    // let requiresOTP = !browser.includes("edge"); // Chrome/Others require OTP, Edge doesn't
 
-    // Mobile device time restriction (10 AM - 1 PM server time)
+    // Mobile Time Restriction (10 AM - 1 PM)
     if (deviceType === "mobile") {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentTimeMinutes = currentHour * 60 + currentMinute;
-      
-      // Server time: 10:00 AM to 1:00 PM (10:00 = 600 minutes, 13:00 = 780 minutes)
-      const allowedStartMinutes = 10 * 60; // 10:00 AM
-      const allowedEndMinutes = 13 * 60; // 1:00 PM
-      
-      if (currentTimeMinutes < allowedStartMinutes || currentTimeMinutes >= allowedEndMinutes) {
+      const istDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+      const currentHour = new Date(istDate).getHours();
+
+      if (currentHour < 10 || currentHour >= 13) {
         return res.status(403).json({
           success: false,
           requiresOTP: false,
-          message: "Mobile device login allowed only between 10 AM to 1 PM (server time)"
+          message: "Mobile device login allowed only between 10 AM to 1 PM (IST)",
         });
       }
     }
 
-    // ✅ Store login history
-    try {
-      await LoginHistory.create({
-        userId: exisitinguser._id,
-        ip: deviceInfo.ip,
-        browser: browser,
-        os: deviceInfo.os,
-        deviceType: deviceType === "mobile" ? "Mobile" : "Desktop", // Match enum in model
-        loginTime: new Date(),
-      });
-      console.log("Login history saved");
-    } catch (historyError) {
-      console.error("[Login] Failed to save login history:", historyError);
-      // Don't fail login if history save fails, just log it
-    }
+    // Save history
+    await LoginHistory.create({
+      userId: existingUser._id,
+      ip: deviceInfo.ip,
+      browser: browser,
+      os: deviceInfo.os,
+      deviceType: deviceType === "mobile" ? "Mobile" : "Desktop",
+      loginTime: new Date(),
+    }).catch(err => console.error("History Save Error:", err));
 
-    // ✅ OTP handling
     if (requiresOTP) {
-      // Generate 6-digit OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiry
+      const expiresAt = Date.now() + 5 * 60 * 1000;
 
-      // Store OTP in memory
-      if (!global.loginOtpStore) {
-        global.loginOtpStore = new Map();
-      }
-      global.loginOtpStore.set(exisitinguser.email, {
-        otp,
-        expiresAt,
-        userId: exisitinguser._id
-      });
+      if (!global.loginOtpStore) global.loginOtpStore = new Map();
+      global.loginOtpStore.set(existingUser.email, { otp, expiresAt, userId: existingUser._id });
 
-      // Send OTP via email
-      try {
-        const emailSent = await sendEmail(
-          exisitinguser.email,
-          "Login Verification OTP",
-          `
-            <h2>Login Verification</h2>
-            <p>Your OTP for login verification is:</p>
-            <h3>${otp}</h3>
-            <p>This OTP will expire in 5 minutes.</p>
-            <p>If you didn't request this, please ignore this email.</p>
-          `
-        );
-
-        if (!emailSent) {
-          console.error("Failed to send OTP email, but proceeding with OTP requirement");
-        }
-      } catch (emailError) {
-        console.error("[Login] Email sending error:", emailError);
-      }
+      // Send OTP via Brevo
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2 style="color: #0092ff;">Login Verification</h2>
+          <p>Your OTP for login verification is:</p>
+          <h1 style="background: #f4f4f4; padding: 10px; display: inline-block; letter-spacing: 5px;">${otp}</h1>
+          <p>This code will expire in 5 minutes.</p>
+        </div>
+      `;
+      
+      await sendEmail(existingUser.email, "Login Verification OTP", emailHtml);
 
       return res.status(200).json({
         success: true,
         requiresOTP: true,
-        message: "OTP sent to your email. Please verify to complete login."
+        message: "OTP sent to your email."
       });
     }
 
-    // ✅ Direct login (no OTP required)
+    // Direct Login
     const token = jwt.sign(
-      { email: exisitinguser.email, id: exisitinguser._id },
-      process.env.JWT_SECRET,
+      { email: existingUser.email, id: existingUser._id }, 
+      process.env.JWT_SECRET, 
       { expiresIn: "1h" }
     );
-
-    return res.status(200).json({
-      success: true,
-      requiresOTP: false,
-      message: "Login successful",
-      data: exisitinguser,
-      token
-    });
+    
+    return res.status(200).json({ success: true, data: existingUser, token });
 
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      requiresOTP: false,
-      message: "Something went wrong"
-    });
+    console.error("Login Error:", error);
+    res.status(500).json({ success: false, message: "Something went wrong" });
   }
 };
 
 
-
 /* ========================= FORGOT PASSWORD ========================= */
 export const forgotPassword = async (req, res) => {
-  const { identifier, identifierType } = req.body;
+  const { identifier } = req.body;
 
   try {
-    // Validate input
-    const trimmed = typeof identifier === "string" ? identifier.trim() : "";
-    if (!trimmed) {
-      return res.status(400).json({ message: "Email or phone is required" });
+    const existingUser = await user.findOne({ email: identifier.toLowerCase().trim() });
+    if (!existingUser) return res.status(404).json({ message: "User not found" });
+
+    // Rate limit: 1 request per day
+    const lastRequest = existingUser.forgotPasswordAt ? new Date(existingUser.forgotPasswordAt).getTime() : 0;
+    if (Date.now() - lastRequest < 24 * 60 * 60 * 1000) {
+      return res.status(429).json({ message: "Reset allowed once per day" });
     }
 
-    // Determine type: explicit or auto-detect (email contains @)
-    const type =
-      identifierType === "email" || identifierType === "phone"
-        ? identifierType
-        : trimmed.includes("@")
-          ? "email"
-          : "phone";
-
-    let existingUser;
-    if (type === "email") {
-      existingUser = await user.findOne({ email: trimmed.toLowerCase() });
-    } else {
-      const normalizedPhone = trimmed.replace(/[\s\-\(\)]/g, "");
-      existingUser = await user.findOne({ phone: normalizedPhone });
-    }
-
-    if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Rate limit: only 1 request per 24 hours
-    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-    if (
-      existingUser.forgotPasswordAt &&
-      Date.now() - new Date(existingUser.forgotPasswordAt).getTime() < ONE_DAY_MS
-    ) {
-      return res.status(429).json({
-        message: "You can request password reset only once per day",
-      });
-    }
-
-    // Generate secure password: A-Z a-z only, 8-12 chars, at least 1 upper + 1 lower
     const newPassword = generateSecurePassword();
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    existingUser.password = hashedPassword;
+    existingUser.password = await bcrypt.hash(newPassword, 12); // Used 12 salt rounds to match Signup
     existingUser.forgotPasswordAt = new Date();
     await existingUser.save();
 
-    // Send password via email (never expose in API response)
-    const recipientEmail = existingUser.email;
+    const emailHtml = `
+      <div style="border: 2px solid #dc3545; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #dc3545;">🔒 Password Reset</h2>
+        <p>Your temporary password is: <strong>${newPassword}</strong></p>
+        <p>Please log in and change it immediately.</p>
+      </div>
+    `;
 
-    let emailSent = false;
-    if (recipientEmail) {
-      try {
-        const emailHtml = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Password Reset</title>
-          </head>
-          <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: #dc3545; color: white; padding: 30px; border-radius: 8px; text-align: center;">
-              <h1>🔒 Password Reset</h1>
-            </div>
-            <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-top: 20px;">
-              <p>Hello,</p>
-              <p>Your password has been successfully reset as requested.</p>
-              <div style="background: white; border: 2px solid #dc3545; border-radius: 4px; padding: 15px; margin: 20px 0; text-align: center;">
-                <h2 style="color: #dc3545; margin: 0; font-family: 'Courier New', monospace;">${newPassword}</h2>
-              </div>
-              <p><strong>Important:</strong> Please change this password after logging in for security.</p>
-              <p style="font-size: 12px; color: #6c757d;">If you didn't request this reset, please contact support immediately.</p>
-            </div>
-          </body>
-          </html>
-        `;
-        
-        emailSent = await sendEmail(
-          recipientEmail,
-          "Password Reset - StackOverflow Clone",
-          emailHtml
-        );
-      } catch (err) {
-        console.error("[ForgotPassword] Email failed:", err.message);
-      }
-    }
+    await sendEmail(existingUser.email, "Password Reset - StackOverflow Clone", emailHtml);
 
-    if (!emailSent) {
-      console.log("[ForgotPassword] Fallback - new password:", newPassword);
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "New password has been sent to your email",
-    });
+    return res.status(200).json({ success: true, message: "New password sent to email" });
   } catch (error) {
-    console.error("[ForgotPassword]", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -574,7 +412,7 @@ export const sendOTP = async (req, res) => {
     // TODO: Implement OTP generation and sending logic
     // - Generate 6-digit OTP
     // - Store OTP with expiry in user model or separate collection
-    // - Send via email (using SendGrid) or SMS (using Twilio)
+    // - Send via email (using Brevo) or SMS (using Twilio)
     // - Return success response
 
     return res.status(501).json({
@@ -752,7 +590,7 @@ export const sendEmailOtp = async (req, res) => {
       expiresAt,
     });
 
-    // Send OTP via SendGrid
+    // Send OTP via Brevo
     let emailSent = false;
     try {
       const emailHtml = `

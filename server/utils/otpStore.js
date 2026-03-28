@@ -1,107 +1,71 @@
-// In-memory OTP storage with rate limiting
-const otpStore = new Map();
-const rateLimitStore = new Map();
+import otpUtils, { isRateLimited } from './otpUtils.js';
+import sendEmail from './sendEmail.js';
 
-// Rate limiting: max 5 OTP requests per hour per email
-const RATE_LIMIT = 5;
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+export const requestLoginOTP = async (req, res) => {
+  const { email } = req.body;
 
-/**
- * Check if email/phone is rate limited
- */
-function isRateLimited(key) {
-  const now = Date.now();
-  const requests = rateLimitStore.get(key) || [];
-  
-  // Remove expired requests
-  const validRequests = requests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
-  
-  if (validRequests.length >= RATE_LIMIT) {
-    return true;
+  // 1. Check Rate Limit
+  if (isRateLimited(email)) {
+    const info = otpUtils.getRateLimitInfo(email);
+    return res.status(429).json({ 
+      message: 'Too many requests. Please try again later.',
+      resetIn: Math.round((info.resetTime - Date.now()) / 1000 / 60) + " minutes"
+    });
   }
-  
-  // Add current request
-  validRequests.push(now);
-  rateLimitStore.set(key, validRequests);
-  return false;
-}
 
-const otpUtils = {
-  generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  },
+  // 2. Generate and Save
+  const otp = otpUtils.generateOTP();
+  otpUtils.saveOTP(email, otp);
 
-  saveOTP(key, otp) {
-    const expiresAt = Date.now() + 5 * 60 * 1000;
-    otpStore.set(key, { otp, expiresAt });
-    console.log(`🔐 OTP saved for ${key}: ${otp}`);
-  },
+  // 3. Send via Brevo
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Login Verification</title>
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+      <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #0092ff 0%, #0066cc 100%); color: white; padding: 40px 30px; text-align: center;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 600;">🔐 Login Verification</h1>
+          <p style="margin: 10px 0 0 0; opacity: 0.9;">StackOverflow Clone</p>
+        </div>
+        
+        <!-- Content -->
+        <div style="padding: 40px 30px; text-align: center;">
+          <p style="font-size: 18px; color: #495057; margin-bottom: 30px;">Your login verification code is:</p>
+          
+          <!-- OTP Display -->
+          <div style="background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; padding: 20px; margin: 20px auto; max-width: 250px; letter-spacing: 8px;">
+            <h2 style="color: #0092ff; font-size: 36px; margin: 0; font-weight: 700; font-family: 'Courier New', monospace;">${otp}</h2>
+          </div>
+          
+          <p style="font-size: 14px; color: #6c757d; margin-top: 30px;">This code will expire in <strong>5 minutes</strong></p>
+          <p style="font-size: 12px; color: #adb5bd; margin-top: 20px;">If you didn't request this login, please ignore this email.</p>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #dee2e6;">
+          <p style="font-size: 12px; color: #6c757d; margin: 0;">© 2024 StackOverflow Clone. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
 
-  verifyOTP(key, inputOTP) {
-    const stored = otpStore.get(key);
-
-    if (!stored) return { valid: false, message: 'OTP not found' };
-
-    if (Date.now() > stored.expiresAt) {
-      otpStore.delete(key);
-      return { valid: false, message: 'OTP expired' };
-    }
-
-    if (stored.otp !== inputOTP) {
-      return { valid: false, message: 'Invalid OTP' };
-    }
-
-    otpStore.delete(key);
-    // Clear rate limit on successful verification
-    rateLimitStore.delete(key);
-    return { valid: true, message: 'OTP verified successfully' };
-  },
-
-  cleanupExpired() {
-    const now = Date.now();
-    let cleanedCount = 0;
+  try {
+    const success = await sendEmail(email, 'Login Verification OTP', emailHtml);
     
-    // Clean expired OTPs
-    for (const [key, value] of otpStore.entries()) {
-      if (now > value.expiresAt) {
-        otpStore.delete(key);
-        cleanedCount++;
-      }
+    if (success) {
+      res.json({ message: 'OTP sent successfully!' });
+    } else {
+      res.status(500).json({ message: 'Failed to send email. Please try again.' });
     }
-    
-    // Clean expired rate limit entries
-    for (const [key, requests] of rateLimitStore.entries()) {
-      const validRequests = requests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
-      if (validRequests.length === 0) {
-        rateLimitStore.delete(key);
-      } else {
-        rateLimitStore.set(key, validRequests);
-      }
-    }
-    
-    if (cleanedCount > 0) {
-      console.log(`🧹 Cleaned ${cleanedCount} expired OTPs`);
-    }
-  },
-
-  getAll() {
-    return Array.from(otpStore.entries());
-  },
-
-  getRateLimitInfo(key) {
-    const requests = rateLimitStore.get(key) || [];
-    const now = Date.now();
-    const validRequests = requests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
-    
-    return {
-      remaining: Math.max(0, RATE_LIMIT - validRequests.length),
-      resetTime: validRequests.length > 0 ? Math.min(...validRequests) + RATE_LIMIT_WINDOW : now + RATE_LIMIT_WINDOW
-    };
+  } catch (error) {
+    console.error('[requestLoginOTP] Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-// Cleanup expired OTPs every 2 minutes
-setInterval(otpUtils.cleanupExpired, 2 * 60 * 1000);
-
-export { isRateLimited };
-export default otpUtils;

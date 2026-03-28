@@ -1,6 +1,7 @@
 import twilio from "twilio";
 import user from "../models/auth.js";
 import sendEmail from "../utils/sendEmail.js";
+
 const ALLOWED_LANGUAGES = ["en", "hi", "es", "pt", "zh", "fr"];
 const OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -36,7 +37,6 @@ export const sendOtp = async (req, res) => {
     await existingUser.save();
 
     if (language === "fr") {
-      // Send via EMAIL for French
       if (!existingUser.email) {
         return res.status(400).json({
           success: false,

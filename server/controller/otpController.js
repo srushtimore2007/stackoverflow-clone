@@ -1,6 +1,6 @@
 // controller/otpController.js
 
-import otpUtils, { isRateLimited } from '../utils/otpStore.js';
+import otpUtils, { isRateLimited } from '../utils/otpUtils.js';
 import sendEmail from '../utils/sendEmail.js';
 import vonageService from '../lib/vonage.js';
 
@@ -99,27 +99,24 @@ export const sendOTP = async (req, res) => {
 
     console.log(` [${new Date().toISOString()}] Generating OTP for ${type}: ${value.substring(0, 3)}***`);
 
+   // --- CASE: EMAIL (Brevo) ---
     if (type === 'email') {
-      // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(value)) {
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid email format',
-          code: 'INVALID_EMAIL'
-        });
+        return res.status(400).json({ success: false, error: 'Invalid email format' });
       }
 
-      // Send email via SendGrid
       const emailHtml = generateOTPEmailTemplate(otp);
+      
+      // ✅ LOGIC UPDATE: Calling your new Brevo Mailer
       const emailSent = await sendEmail(
-        value,
-        'Your Verification Code - StackOverflow Clone',
+        value, 
+        'Your Verification Code - StackOverflow Clone', 
         emailHtml
       );
 
       if (emailSent) {
-        console.log(` [${Date.now() - startTime}ms] Email OTP sent successfully to ${value}`);
+        console.log(`[${Date.now() - startTime}ms] Brevo OTP sent to ${value}`);
         return res.json({
           success: true,
           message: 'OTP sent to your email',
@@ -127,15 +124,13 @@ export const sendOTP = async (req, res) => {
           expiresIn: '5 minutes'
         });
       } else {
-        console.log(` [${Date.now() - startTime}ms] Failed to send email OTP to ${value}`);
         return res.status(500).json({
           success: false,
-          error: 'Failed to send OTP email. Please try again.',
+          error: 'Failed to send email via Brevo.',
           code: 'EMAIL_SEND_FAILED'
         });
       }
     }
-
     if (type === 'phone') {
       // Phone validation and formatting
       if (!vonageService.validatePhoneNumber(value)) {

@@ -83,10 +83,14 @@ app.get("/", (req, res) => {
 // MongoDB Connection
 // ======================
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGODB_URI;
+const MONGO_URI = process.env.MONGODB_URL || process.env.MONGODB_URI;
 
 if (!MONGO_URI) {
-  console.error("❌ MONGODB_URI is missing in .env file");
+  console.error("❌ MONGODB_URL or MONGODB_URI is missing in .env file");
+  console.error("Please add one of these to your .env file:");
+  console.error("MONGODB_URL=mongodb://localhost:27017/stackoverflow-clone");
+  console.error("or");
+  console.error("MONGODB_URI=mongodb://localhost:27017/stackoverflow-clone");
   process.exit(1);
 }
 
