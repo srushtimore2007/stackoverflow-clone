@@ -20,7 +20,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
   const [timeLeft, setTimeLeft] = useState(0);
   const [resendTimer, setResendTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const API_BASE_URL = "http://localhost:5000";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   const showMessage = (msg: string, type: 'success' | 'error' | 'info' = 'info') => {
     setMessage(msg);

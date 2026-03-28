@@ -177,7 +177,7 @@ export function CreatePost({ onSuccess }: { onSuccess?: () => void }) {
       )}
       <Button
         type="submit"
-        disabled={loading || (limitInfo && !limitInfo.canPost)}
+        disabled={loading || (limitInfo?.canPost === false)}
       >
         {loading ? "Posting..." : "Post"}
       </Button>

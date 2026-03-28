@@ -39,9 +39,9 @@ export class EnhancedTranslationManager {
   private lastHealthCheck: number = 0;
   private healthCheckInterval: number = 30000; // 30 seconds
 
-  constructor(baseUrl: string = 'http://localhost:5000') {
-    this.baseUrl = baseUrl;
-    this.checkLibreTranslateHealth();
+  constructor(baseUrl?: string) { 
+   this.baseUrl = baseUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+   this.checkLibreTranslateHealth();
   }
 
   /**

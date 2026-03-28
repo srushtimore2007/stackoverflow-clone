@@ -121,8 +121,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     null
   );
 
-  const API =  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
+const API = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/api`
+  : "http://localhost:5000/api";
 
   const refreshRewards = async () => {
     if (typeof window === "undefined") return;
