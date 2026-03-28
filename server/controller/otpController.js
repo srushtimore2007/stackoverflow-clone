@@ -1,21 +1,12 @@
 // controller/otpController.js
 
 import otpUtils from '../utils/otpStore.js';
-import nodemailer from 'nodemailer';
+import { sendEmail } from '../utils/sendEmail.js';
 import vonageService from '../lib/vonage.js';
-
-// Initialize nodemailer
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 // Language OTP requirements
 const LANGUAGE_OTP_REQUIREMENTS = {
-  en: { required: false, type: null },
+  en: { required: false, type: 'phone' },
   fr: { required: true, type: 'email' },
   hi: { required: true, type: 'phone' },
   es: { required: true, type: 'phone' },
@@ -46,25 +37,46 @@ export const sendOTP = async (req, res) => {
     otpUtils.saveOTP(value, otp);
 
     if (type === 'email') {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: value,
-        subject: 'Language Switch Verification - OTP',
-        html: `
-          <h2>Language Switch Verification</h2>
-          <p>Your OTP is:</p>
-          <h1>${otp}</h1>
-          <p>Valid for 5 minutes</p>
+      const emailSent = await sendEmail(
+        value,
+        'Your OTP Code - StackOverflow Clone',
         `
-      });
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Your OTP Code</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
+              <h2 style="color: #007bff; margin-bottom: 20px;">Language Switch Verification</h2>
+              <p style="font-size: 16px; color: #666; margin-bottom: 20px;">Your OTP code is:</p>
+              <div style="background: white; border: 2px solid #007bff; border-radius: 4px; padding: 15px; margin: 20px auto; max-width: 200px;">
+                <h1 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+              </div>
+              <p style="font-size: 14px; color: #666; margin-top: 20px;">This code will expire in 5 minutes.</p>
+              <p style="font-size: 12px; color: #999; margin-top: 30px;">If you didn't request this, please ignore this email.</p>
+            </div>
+          </body>
+          </html>
+        `
+      );
 
-      console.log(`📧 Email OTP sent: ${otp}`);
-
-      return res.json({
-        success: true,
-        message: 'OTP sent to email',
-        type: 'email'
-      });
+      if (emailSent) {
+        console.log(`📧 Email OTP sent: ${otp}`);
+        return res.json({
+          success: true,
+          message: 'OTP sent to email',
+          type: 'email'
+        });
+      } else {
+        console.log(`❌ Failed to send email OTP to ${value}`);
+        return res.status(500).json({
+          success: false,
+          error: 'Failed to send OTP email'
+        });
+      }
     }
 
     if (type === 'phone') {

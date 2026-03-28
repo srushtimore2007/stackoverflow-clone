@@ -1,7 +1,9 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
- * Sends email using Nodemailer with existing environment credentials
+ * Sends email using SendGrid with existing environment credentials
  * 
  * @param {string} to - Recipient email address
  * @param {string} subject - Email subject
@@ -9,24 +11,18 @@ import nodemailer from 'nodemailer';
  * @returns {Promise<boolean>} - True if email sent successfully
  */
 export async function sendEmail(to, subject, html) {
-  try {
-    // Create transporter using existing environment variables
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+  const msg = {
+    to: to,                       // user email
+    from: process.env.SENDGRID_SENDER_EMAIL,  // verified single sender
+    replyTo: process.env.SENDGRID_SENDER_EMAIL, // mandatory by SendGrid
+    subject: subject,
+    html: html,
+  };
 
+  try {
     // Send email with timeout protection
     await Promise.race([
-      transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: to,
-        subject: subject,
-        html: html
-      }),
+      sgMail.send(msg),
       new Promise((_, reject) => 
         setTimeout(() => reject(new Error('timeout')), 15000))
     ]);
