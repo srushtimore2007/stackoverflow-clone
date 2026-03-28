@@ -1,5 +1,5 @@
 import express from "express";
-import { sendEmail } from '../utils/sendEmail.js';
+import sendEmail from '../utils/sendEmail.js';
 import User from "../models/auth.js";
 import bcrypt from "bcryptjs";
 import auth from "../middleware/auth.js";

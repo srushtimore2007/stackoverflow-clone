@@ -1,11 +1,5 @@
 // lib/utils/email-service.ts
 
-/**
- * Email Service - Handles sending emails
- * 
- * Note: This is a placeholder implementation. In production, integrate with
- * email providers like SendGrid, AWS SES, Resend, or NodeMailer.
- */
 export class EmailService {
   /**
    * Sends password reset email with the new generated password

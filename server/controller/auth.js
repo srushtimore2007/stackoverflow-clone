@@ -3,7 +3,7 @@ import user from "../models/auth.js";
 import LoginHistory from "../models/LoginHistory.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendEmail } from "../utils/sendEmail.js";
+import sendEmail from "../utils/sendEmail.js";
 
 /**
  * Generate a secure password: only A-Z, a-z, length 8-12,
@@ -574,7 +574,7 @@ export const sendOTP = async (req, res) => {
     // TODO: Implement OTP generation and sending logic
     // - Generate 6-digit OTP
     // - Store OTP with expiry in user model or separate collection
-    // - Send via email (using nodemailer) or SMS (using Twilio)
+    // - Send via email (using SendGrid) or SMS (using Twilio)
     // - Return success response
 
     return res.status(501).json({

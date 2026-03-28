@@ -1,7 +1,6 @@
-import nodemailer from "nodemailer";
 import twilio from "twilio";
 import user from "../models/auth.js";
-
+import sendEmail from "../utils/sendEmail.js";
 const ALLOWED_LANGUAGES = ["en", "hi", "es", "pt", "zh", "fr"];
 const OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -38,9 +37,6 @@ export const sendOtp = async (req, res) => {
 
     if (language === "fr") {
       // Send via EMAIL for French
-      const emailUser = process.env.EMAIL_USER;
-      const emailPass = process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD;
-
       if (!existingUser.email) {
         return res.status(400).json({
           success: false,
@@ -48,26 +44,45 @@ export const sendOtp = async (req, res) => {
         });
       }
 
-      if (!emailUser || !emailPass) {
-        console.log("[send-otp] Fallback - OTP for French:", otp);
-        return res.status(200).json({
-          success: true,
-          message: "OTP sent (fallback: check console)",
-        });
-      }
-
       try {
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: { user: emailUser, pass: emailPass },
-        });
-        await transporter.sendMail({
-          from: emailUser,
-          to: existingUser.email,
-          subject: "Language Verification OTP",
-          text: `Your OTP is ${otp}`,
-          html: `<p>Your OTP is <strong>${otp}</strong></p>`,
-        });
+        const emailHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Language Verification OTP</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #007bff; color: white; padding: 30px; border-radius: 8px; text-align: center;">
+              <h1>🌐 Language Verification</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-top: 20px;">
+              <p>Hello,</p>
+              <p>Your language change verification code is:</p>
+              <div style="background: white; border: 2px solid #007bff; border-radius: 4px; padding: 15px; margin: 20px 0; text-align: center;">
+                <h2 style="color: #007bff; margin: 0; font-family: 'Courier New', monospace; letter-spacing: 3px;">${otp}</h2>
+              </div>
+              <p>This code will expire in <strong>5 minutes</strong>.</p>
+              <p style="font-size: 12px; color: #6c757d;">If you didn't request this, please ignore this email.</p>
+            </div>
+          </body>
+          </html>
+        `;
+
+        const emailSent = await sendEmail(
+          existingUser.email,
+          "Language Verification OTP - StackOverflow Clone",
+          emailHtml
+        );
+
+        if (!emailSent) {
+          console.error("[send-otp] Email failed");
+          return res.status(500).json({
+            success: false,
+            message: "Failed to send OTP via email",
+          });
+        }
       } catch (err) {
         console.error("[send-otp] Email failed:", err.message);
         return res.status(500).json({

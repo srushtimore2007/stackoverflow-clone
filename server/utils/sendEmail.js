@@ -11,7 +11,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  * @param {string} html - HTML email content
  * @returns {Promise<boolean>} - True if email sent successfully
  */
-export async function sendEmail(to, subject, html) {
+export default async function sendEmail(to, subject, html) {
   // Validate required environment variables
   if (!process.env.SENDGRID_API_KEY) {
     console.error('❌ SENDGRID_API_KEY is missing in environment variables');
@@ -20,6 +20,13 @@ export async function sendEmail(to, subject, html) {
 
   if (!process.env.SENDGRID_SENDER_EMAIL) {
     console.error('❌ SENDGRID_SENDER_EMAIL is missing in environment variables');
+    return false;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(to)) {
+    console.error(`❌ Invalid email format: ${to}`);
     return false;
   }
 
