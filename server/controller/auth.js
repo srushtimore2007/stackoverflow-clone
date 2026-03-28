@@ -49,7 +49,7 @@ export const Signup = async (req, res) => {
 
     res.status(200).json({ data: newuser, token });
   } catch (error) {
-    console.log(error);
+    console.error("[Signup] Error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -88,6 +88,7 @@ export const Login = async (req, res) => {
 
     // let requiresOTP = !browser.includes("edge"); // Chrome/Others require OTP, Edge doesn't
 
+    let requiresOTP;
     if (browser.includes("edge")) {
       requiresOTP = false; // Edge allows direct login
     } else {
@@ -137,7 +138,12 @@ export const Login = async (req, res) => {
         </div>
       `;
       
-      await sendEmail(existingUser.email, "Login Verification OTP", emailHtml);
+      try {
+        await sendEmail(existingUser.email, "Login Verification OTP", emailHtml);
+      } catch (emailError) {
+        console.error('[Login] Failed to send OTP email:', emailError.message);
+        // Continue with OTP flow even if email fails
+      }
 
       return res.status(200).json({
         success: true,
@@ -189,7 +195,12 @@ export const forgotPassword = async (req, res) => {
       </div>
     `;
 
-    await sendEmail(existingUser.email, "Password Reset - StackOverflow Clone", emailHtml);
+    try {
+      await sendEmail(existingUser.email, "Password Reset - StackOverflow Clone", emailHtml);
+    } catch (emailError) {
+      console.error('[forgotPassword] Failed to send password reset email:', emailError.message);
+      // Still return success since password was reset
+    }
 
     return res.status(200).json({ success: true, message: "New password sent to email" });
   } catch (error) {
@@ -203,7 +214,7 @@ export const getallusers = async (req, res) => {
     const alluser = await user.find();
     res.status(200).json({ data: alluser });
   } catch (error) {
-    console.log(error);
+    console.error("[getallusers] Error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -289,7 +300,7 @@ export const updateprofile = async (req, res) => {
 
     res.status(200).json({ data: updatedProfile });
   } catch (error) {
-    console.log(error);
+    console.error("[updateprofile] Error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -370,7 +381,7 @@ export const updateLanguagePreference = async (req, res) => {
       preferredLanguage: existingUser.preferredLanguage,
     });
   } catch (error) {
-    console.log(error);
+    console.error("[updateLanguagePreference] Error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
