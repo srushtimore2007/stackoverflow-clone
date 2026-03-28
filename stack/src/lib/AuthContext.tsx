@@ -1,79 +1,3 @@
-// // src/lib/AuthContext.tsx
-// import React, { createContext, useContext, useState, ReactNode } from "react";
-
-// interface AuthContextType {
-//   user: any | null;
-//   loading: boolean;
-//   Signup: (data: { name: string; email: string; password: string }) => Promise<void>;
-//   Login: (data: { email: string; password: string }) => Promise<void>;
-//   Logout: () => void;
-// }
-
-// const AuthContext = createContext<AuthContextType>({
-//   user: null,
-//   loading: false,
-//   Signup: async () => {},
-//   Login: async () => {},
-//   Logout: () => {},
-// });
-
-// export const AuthProvider = ({ children }: { children: ReactNode }) => {
-//   const [user, setUser] = useState<any | null>(null);
-//   const [loading, setLoading] = useState(false);
-
-//   const Signup = async (data: { name: string; email: string; password: string }) => {
-//     setLoading(true);
-//     try {
-//       // Call your backend API for signup
-//       const res = await fetch("/api/auth/signup", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       if (!res.ok) throw new Error("Signup failed");
-//       const json = await res.json();
-//       setUser(json.user); // or whatever your API returns
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const Login = async (data: { email: string; password: string }) => {
-//     setLoading(true);
-//     try {
-//       const res = await fetch("/api/auth/login", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       if (!res.ok) throw new Error("Login failed");
-//       const json = await res.json();
-//       setUser(json.user);
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const Logout = () => {
-//     setUser(null);
-//     // optionally call /logout endpoint
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ user, loading, Signup, Login, Logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export const useAuth = () => useContext(AuthContext);
-
 // src/lib/AuthContext.tsx
 "use client";
 
@@ -122,8 +46,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
 const API = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/api`
-  : "http://localhost:5000/api";
+  ? `${process.env.NEXT_PUBLIC_API_URL}`
+  : "http://localhost:5000";
 
   const refreshRewards = async () => {
     if (typeof window === "undefined") return;
