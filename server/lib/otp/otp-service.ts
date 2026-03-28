@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { sendEmail } from '../../utils/sendEmail.js';
 
 interface OTPRecord {
   otp: string;
@@ -36,20 +36,38 @@ export const OTPService = {
 
   sendEmailOTP: async (email: string, otp: string): Promise<boolean> => {
     try {
-      const transporter = nodemailer.createTransport({
-        service: process.env.EMAIL_SERVICE || 'gmail',
-        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS },
-      });
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Your OTP Code</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: #6f42c1; color: white; padding: 30px; border-radius: 8px; text-align: center;">
+            <h1>🔐 Your OTP Code</h1>
+          </div>
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-top: 20px;">
+            <p>Hello,</p>
+            <p>Your verification code is:</p>
+            <div style="background: white; border: 2px solid #6f42c1; border-radius: 4px; padding: 15px; margin: 20px 0; text-align: center;">
+              <h2 style="color: #6f42c1; margin: 0; font-family: 'Courier New', monospace; letter-spacing: 3px;">${otp}</h2>
+            </div>
+            <p>This code will expire in <strong>5 minutes</strong>.</p>
+            <p style="font-size: 12px; color: #6c757d;">If you didn't request this, please ignore this email.</p>
+          </div>
+        </body>
+        </html>
+      `;
 
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Your OTP Code',
-        text: `Your OTP is ${otp}, valid for 5 minutes.`,
-        html: `<p>Your OTP is <strong>${otp}</strong>, valid for 5 minutes.</p>`,
-      });
+      const success = await sendEmail(
+        email,
+        'Your OTP Code - StackOverflow Clone',
+        emailHtml
+      );
 
-      return true;
+      return success;
     } catch (error) {
       console.error('OTP email error:', error);
       return false;

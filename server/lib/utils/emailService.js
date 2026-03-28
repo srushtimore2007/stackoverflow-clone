@@ -1,13 +1,5 @@
-import nodemailer from 'nodemailer';
+import { sendEmail } from '../../utils/sendEmail.js';
 import { SUBSCRIPTION_PLANS } from '../../config/plans.js';
-
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-IN', {
@@ -95,17 +87,19 @@ export const sendSubscriptionEmail = async (userEmail, subscriptionData) => {
     </html>
   `;
 
-  const mailOptions = {
-    from: `"Your App Name" <${process.env.EMAIL_USER}>`,
-    to: userEmail,
-    subject: `Subscription Activated – ${planDetails.name}`,
-    html: htmlContent
-  };
-
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    const success = await sendEmail(
+      userEmail,
+      `Subscription Activated – ${planDetails.name}`,
+      htmlContent
+    );
+    
+    if (!success) {
+      throw new Error('Failed to send subscription email');
+    }
+    
+    console.log('Subscription email sent successfully to:', userEmail);
+    return { success: true };
   } catch (error) {
     console.error('Email sending error:', error);
     throw new Error('Failed to send subscription email');

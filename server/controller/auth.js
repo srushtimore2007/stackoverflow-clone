@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import nodemailer from "nodemailer";
 import user from "../models/auth.js";
 import LoginHistory from "../models/LoginHistory.js";
 import bcrypt from "bcryptjs";
@@ -306,28 +305,41 @@ export const forgotPassword = async (req, res) => {
     await existingUser.save();
 
     // Send password via email (never expose in API response)
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD;
     const recipientEmail = existingUser.email;
 
     let emailSent = false;
-    if (recipientEmail && emailUser && emailPass) {
+    if (recipientEmail) {
       try {
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: emailUser,
-            pass: emailPass,
-          },
-        });
-        await transporter.sendMail({
-          from: emailUser,
-          to: recipientEmail,
-          subject: "Password Reset",
-          text: `Your new password is: ${newPassword}\n\nPlease change it after logging in.`,
-          html: `<p>Your new password is: <strong>${newPassword}</strong></p><p>Please change it after logging in.</p>`,
-        });
-        emailSent = true;
+        const emailHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Password Reset</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #dc3545; color: white; padding: 30px; border-radius: 8px; text-align: center;">
+              <h1>🔒 Password Reset</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-top: 20px;">
+              <p>Hello,</p>
+              <p>Your password has been successfully reset as requested.</p>
+              <div style="background: white; border: 2px solid #dc3545; border-radius: 4px; padding: 15px; margin: 20px 0; text-align: center;">
+                <h2 style="color: #dc3545; margin: 0; font-family: 'Courier New', monospace;">${newPassword}</h2>
+              </div>
+              <p><strong>Important:</strong> Please change this password after logging in for security.</p>
+              <p style="font-size: 12px; color: #6c757d;">If you didn't request this reset, please contact support immediately.</p>
+            </div>
+          </body>
+          </html>
+        `;
+        
+        emailSent = await sendEmail(
+          recipientEmail,
+          "Password Reset - StackOverflow Clone",
+          emailHtml
+        );
       } catch (err) {
         console.error("[ForgotPassword] Email failed:", err.message);
       }
@@ -733,32 +745,51 @@ export const sendEmailOtp = async (req, res) => {
       global.emailOtpStore = new Map();
     }
 
-    // Key the OTP store by normalized email so verification
+    // Key OTP store by normalized email so verification
     // does not depend on JWT / auth middleware.
     global.emailOtpStore.set(normalizedEmail, {
       otp,
       expiresAt,
     });
 
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD;
+    // Send OTP via SendGrid
+    let emailSent = false;
+    try {
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Your Verification OTP</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: #007bff; color: white; padding: 30px; border-radius: 8px; text-align: center;">
+            <h1>🔐 Your Verification Code</h1>
+          </div>
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-top: 20px;">
+            <p>Hello,</p>
+            <p>Your verification code is:</p>
+            <div style="background: white; border: 2px solid #007bff; border-radius: 4px; padding: 15px; margin: 20px 0; text-align: center;">
+              <h2 style="color: #007bff; margin: 0; font-family: 'Courier New', monospace; letter-spacing: 3px;">${otp}</h2>
+            </div>
+            <p>This code will expire in <strong>5 minutes</strong>.</p>
+            <p style="font-size: 12px; color: #6c757d;">If you didn't request this, please ignore this email.</p>
+          </div>
+        </body>
+        </html>
+      `;
+      
+      emailSent = await sendEmail(
+        email,
+        "Your Verification OTP - StackOverflow Clone",
+        emailHtml
+      );
+    } catch (error) {
+      console.error("[sendEmailOtp] Email sending error:", error.message);
+    }
 
-    if (emailUser && emailPass) {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: emailUser,
-          pass: emailPass,
-        },
-      });
-
-      await transporter.sendMail({
-        from: emailUser,
-        to: email,
-        subject: "Your Verification OTP",
-        text: `Your OTP is: ${otp}. It expires in 5 minutes.`,
-      });
-    } else {
+    if (!emailSent) {
       console.log(`OTP for ${email}: ${otp}`);
     }
 
