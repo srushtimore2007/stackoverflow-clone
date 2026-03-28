@@ -1,13 +1,12 @@
 // src/lib/email/email-service.ts
 
-import { sendEmail } from '../../utils/sendEmail.js';
+import sendEmail from '../../utils/sendEmail.js';
 import { sendSMS } from '../../utils/sendSMS.js';
 
 /**
  * Email Service - Handles sending emails
  * 
- * Note: This is a placeholder implementation. In production, integrate with
- * email providers like SendGrid, AWS SES, Resend, or NodeMailer.
+ * Note: This uses SendGrid for email delivery.
  */
 export class EmailService {
   /**
@@ -25,7 +24,7 @@ export class EmailService {
       const subject = 'Your Password Has Been Reset';
       const html = this.getPasswordResetEmailTemplate(newPassword);
 
-      // Send real email using Nodemailer utility
+      // Send real email using SendGrid utility
       const success = await sendEmail(to, subject, html);
       
       if (!success) {

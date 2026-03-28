@@ -1,4 +1,4 @@
-import { sendEmail } from '../../utils/sendEmail.js';
+import sendEmail from "../../utils/sendEmail";
 
 interface OTPRecord {
   otp: string;

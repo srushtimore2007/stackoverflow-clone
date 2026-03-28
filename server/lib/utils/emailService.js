@@ -1,4 +1,4 @@
-import { sendEmail } from '../../utils/sendEmail.js';
+import sendEmail from '../../utils/sendEmail.js';
 import { SUBSCRIPTION_PLANS } from '../../config/plans.js';
 
 const formatDate = (date) => {
