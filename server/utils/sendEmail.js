@@ -27,7 +27,8 @@ export async function sendEmail(to, subject, html) {
         subject: subject,
         html: html
       }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('timeout')), 15000))
     ]);
 
     console.log(`✅ Email sent successfully to ${to}`);
