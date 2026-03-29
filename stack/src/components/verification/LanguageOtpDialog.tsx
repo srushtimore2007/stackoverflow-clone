@@ -10,7 +10,7 @@ import {
 } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { sendPhoneOtp, verifyPhoneOtp } from '../../lib/phoneOtp';
+import { OTPService } from '../../lib/otp/otp-service';
 
 interface LanguageOtpDialogProps {
   open: boolean;
@@ -50,12 +50,29 @@ export function LanguageOtpDialog({
     setError(null);
     setLoading(true);
     try {
-      const result = await sendPhoneOtp(phone.trim());
-      if (!result.success) {
-        setError(result.message || 'Failed to send OTP');
+      // Normalize phone number (remove spaces, dashes, parentheses)
+      const normalizedPhone = phone.trim().replace(/[\s\-\(\)]/g, '');
+      
+      // Validate phone number format (basic validation)
+      const phoneRegex = /^\+?[0-9]{10,15}$/;
+      if (!phoneRegex.test(normalizedPhone)) {
+        setError('Invalid phone number format. Use E.164 format (e.g., +919876543210)');
         return;
       }
+
+      // Store OTP and send via Vonage SMS
+      const { otp, expiresAt } = OTPService.storeOTP(normalizedPhone, 'sms');
+      const sent = await OTPService.sendVonageSMSOTP(normalizedPhone, otp);
+      
+      if (!sent) {
+        setError('Failed to send OTP. Please try again.');
+        return;
+      }
+      
       setStep('otp');
+    } catch (error) {
+      console.error('Send OTP error:', error);
+      setError('Failed to send OTP. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -69,13 +86,22 @@ export function LanguageOtpDialog({
     setError(null);
     setLoading(true);
     try {
-      const result = await verifyPhoneOtp(otp);
-      if (!result.success) {
-        setError(result.message || 'Invalid or expired OTP');
+      // Normalize phone number for verification
+      const normalizedPhone = phone.trim().replace(/[\s\-\(\)]/g, '');
+      
+      // Verify OTP using OTPService
+      const isValid = OTPService.verifyOTP(normalizedPhone, otp);
+      
+      if (!isValid) {
+        setError('Invalid or expired OTP');
         return;
       }
+      
       onVerified(phone.trim());
       onOpenChange(false);
+    } catch (error) {
+      console.error('Verify OTP error:', error);
+      setError('Failed to verify OTP. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -127,9 +153,6 @@ export function LanguageOtpDialog({
               {error}
             </p>
           )}
-
-          {/* Invisible reCAPTCHA container required by Firebase phone auth */}
-          <div id="recaptcha-container" />
         </div>
 
         <DialogFooter>

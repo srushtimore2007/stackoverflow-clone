@@ -11,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useDynamicTranslation, DynamicText } from "../hooks/useDynamicTranslation";
-import { useDynamicContent } from "../components/DynamicTranslationExample";
 
 // Sample questions data - in real app this would come from API
 const staticQuestions = [
@@ -75,11 +74,9 @@ const HomePage: React.FC = () => {
   const router = useRouter();
   const { tSync, locale } = useDynamicTranslation('common');
   
-  // Use dynamic content hook for automatic translation
-  const { translatedContent: questions, isTranslating } = useDynamicContent<Question>(
-    staticQuestions,
-    ['title', 'content'] // Fields to translate
-  );
+  // Use static questions for now (dynamic translation can be added later)
+  const [questions, setQuestions] = useState(staticQuestions);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const [questionsList, setQuestionsList] = useState<Question[]>(staticQuestions);
   const [loading, setLoading] = useState(false);

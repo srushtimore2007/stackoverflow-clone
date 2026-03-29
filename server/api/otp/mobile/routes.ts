@@ -2,7 +2,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { OTPService } from '../../../lib/otp/otp-service';
-// import { OTPResponse } from '../../../types/otp';
 import { OTPResponse } from '../../../shared/types/otp';
 
 
@@ -35,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate and store OTP (automatically replaces existing OTP if any)
-    const { otp, expiresAt } = OTPService.storeOTP(normalizedMobile, 'mobile');
+    const { otp, expiresAt } = OTPService.storeOTP(normalizedMobile, 'phone');
 
     // Send OTP via SMS
     const sent = await OTPService.sendMobileOTP(normalizedMobile, otp);
