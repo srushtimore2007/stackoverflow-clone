@@ -1,6 +1,6 @@
 // services/questionService.ts
 
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { QuestionResponse, ApiError } from '../types/subscription';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL + '/api';
@@ -44,8 +44,8 @@ export const createQuestion = async (
 };
 
 const handleApiError = (error: unknown): Error => {
-  if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError<ApiError>;
+  if (error && typeof error === 'object' && 'isAxiosError' in error) {
+    const axiosError = error as any;
     if (axiosError.response?.data) {
       return new Error(axiosError.response.data.message || 'An error occurred');
     }

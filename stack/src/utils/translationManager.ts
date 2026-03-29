@@ -13,6 +13,16 @@ export interface TranslationRequest {
   namespace?: string;
 }
 
+export interface TranslationResponse {
+  translatedText: string;
+  success: boolean;
+  method?: string;
+  responseTime?: number;
+  sourceLanguage?: string;
+  targetLanguage?: string;
+  error?: string;
+}
+
 export interface TranslationCache {
   [key: string]: {
     text: string;
@@ -167,7 +177,7 @@ class TranslationManager {
     }
 
     try {
-      const response = await axiosInstance.post('/api/translate', {
+      const response = await axiosInstance.post<TranslationResponse>('/api/translate', {
         text,
         targetLanguage: targetLocale,
         sourceLanguage: 'en'

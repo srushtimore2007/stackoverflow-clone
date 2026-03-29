@@ -1,7 +1,4 @@
-import axios, {
-  AxiosError,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
@@ -20,9 +17,9 @@ const publicRoutes = [
   "/api/auth/reset-password",
 ];
 
-// ✅ REQUEST INTERCEPTOR (Axios v1 safe)
+// REQUEST INTERCEPTOR
 axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config) => {
     if (typeof window !== "undefined") {
       const token =
         localStorage.getItem("token") ||
@@ -32,20 +29,20 @@ axiosInstance.interceptors.request.use(
         config.url?.includes(route)
       );
 
-      if (token && !isPublicRoute) {
+      if (token && !isPublicRoute && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
 
     return config;
   },
-  (error: AxiosError) => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 
-// ✅ RESPONSE INTERCEPTOR
+// RESPONSE INTERCEPTOR
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
+  (error) => {
     if (typeof window !== "undefined") {
       if (error.response?.status === 401) {
         const isAuthRoute = publicRoutes.some((route) =>

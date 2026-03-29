@@ -21,6 +21,18 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+interface UpdateProfileResponse {
+  success: boolean;
+  data: any;
+  message?: string;
+}
+
+interface TransferResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
 const index = () => {
   const { user, rewards } = useAuth();
   const router = useRouter();
@@ -67,7 +79,8 @@ const index = () => {
       if (!id || typeof id !== "string") return;
       try {
         const res = await axiosInstance.get(`/api/auth/user/${id}`);
-        setusers(res.data.data);
+        const userData = res.data as { data: any };
+        setusers(userData.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -96,17 +109,19 @@ const index = () => {
       setRewardsLoading(true);
       try {
         const res = await axiosInstance.get(`/api/points/user/${id}`);
-        if (res.data?.success) {
-          setPointsSummary(res.data.data);
+        const responseData = res.data as { success?: boolean; data?: { points: number; badges: string[] } };
+        if (responseData?.success && responseData?.data) {
+          setPointsSummary(responseData.data);
         }
 
         if (user?._id && String(id) === String(user._id)) {
           const historyRes = await axiosInstance.get(`/api/points/history`);
-          if (historyRes.data?.success) {
-            setPointsHistory(historyRes.data.data?.transactionHistory || []);
+          const historyData = historyRes.data as { success?: boolean; data?: { points?: number; badges?: string[]; transactionHistory?: any[] } };
+          if (historyData?.success) {
+            setPointsHistory(historyData.data?.transactionHistory || []);
             setPointsSummary({
-              points: historyRes.data.data?.points ?? res.data.data?.points ?? 0,
-              badges: historyRes.data.data?.badges ?? res.data.data?.badges ?? [],
+              points: historyData.data?.points ?? responseData.data?.points ?? 0,
+              badges: historyData.data?.badges ?? responseData.data?.badges ?? [],
             });
           }
         } else {
@@ -145,7 +160,7 @@ const index = () => {
     const t = setTimeout(async () => {
       try {
         const res = await axiosInstance.get(`/api/auth/search?query=${encodeURIComponent(q)}`);
-        const results = res.data?.data || [];
+        const results = (res.data as { data: any[] })?.data || [];
         const filtered = results.filter((u: any) => String(u._id) !== String(user?._id));
         setRecipientResults(filtered.slice(0, 8));
       } catch (e) {
@@ -177,7 +192,7 @@ const index = () => {
       setIsFriend(true);
       toast.success("Friend added!");
       const res = await axiosInstance.get(`/api/auth/user/${id}`);
-      setusers(res.data.data);
+      setusers((res.data as { data: any }).data);
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
@@ -190,7 +205,7 @@ const index = () => {
 
   const handleSaveProfile = async () => {
     try {
-      const res = await axiosInstance.patch(`/api/auth/update/${user?._id}`, { editForm });
+      const res = await axiosInstance.patch<UpdateProfileResponse>(`/api/auth/update/${user?._id}`, { editForm });
       if (res.data.data) {
         const updatedUser = { ...users, ...editForm };
         setusers(updatedUser);
@@ -229,22 +244,23 @@ const index = () => {
     }
     setTransferring(true);
     try {
-      const res = await axiosInstance.post(`/api/points/transfer`, {
+      const res = await axiosInstance.post<TransferResponse>(`/api/points/transfer`, {
         recipientId: selectedRecipient._id,
         points: amount,
       });
-      toast.success(res.data?.message || "Points transferred");
+      toast.success(res.data.message || "Points transferred");
       setTransferPoints("");
       setRecipientQuery("");
       setSelectedRecipient(null);
       setRecipientResults([]);
       if (user?._id) {
         const historyRes = await axiosInstance.get(`/api/points/history`);
-        if (historyRes.data?.success) {
-          setPointsHistory(historyRes.data.data?.transactionHistory || []);
+        const historyData = historyRes.data as { success?: boolean; data?: { points?: number; badges?: string[]; transactionHistory?: any[] } };
+        if (historyData?.success) {
+          setPointsHistory(historyData.data?.transactionHistory || []);
           setPointsSummary({
-            points: historyRes.data.data?.points ?? 0,
-            badges: historyRes.data.data?.badges ?? [],
+            points: historyData.data?.points ?? 0,
+            badges: historyData.data?.badges ?? [],
           });
         }
       }

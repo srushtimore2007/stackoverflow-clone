@@ -6,6 +6,12 @@ interface OTPVerificationProps {
   onVerificationSuccess?: (phoneNumber: string) => void;
 }
 
+interface OTPResponse {
+  success: boolean;
+  message?: string;
+  otp?: string;
+}
+
 export const OTPVerification: React.FC<OTPVerificationProps> = ({ 
   onVerificationSuccess 
 }) => {
@@ -68,7 +74,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     clearResendTimer();
 
     try {
-      const response = await axios.post(
+      const response = await axios.post<OTPResponse>(
         `${API_BASE_URL}/api/otp/send`,
         {  
           type: "phone",
@@ -107,7 +113,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
+      const response = await axios.post<OTPResponse>(
         `${API_BASE_URL}/api/otp/verify`,
         {
           value: phoneNumber.replace(/\s/g, ''),
@@ -148,7 +154,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     clearResendTimer();
 
     try {
-      const response = await axios.post(
+      const response = await axios.post<OTPResponse>(
         `${API_BASE_URL}/api/otp/send`,
         {
           type: "phone",

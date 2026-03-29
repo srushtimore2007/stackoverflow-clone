@@ -28,7 +28,16 @@ export function CreatePost({ onSuccess }: { onSuccess?: () => void }) {
     if (!user) return;
     const fetchLimit = async () => {
       try {
-        const res = await axiosInstance.get("/api/posts/limit-info");
+        const res = await axiosInstance.get<{
+          success: boolean;
+          data: {
+            friendCount: number;
+            limit: number | "unlimited";
+            postsToday: number;
+            remaining: number;
+            canPost: boolean;
+          };
+        }>("/api/posts/limit-info");
         if (res.data.success) setLimitInfo(res.data.data);
       } catch {
         // ignore
@@ -83,7 +92,9 @@ export function CreatePost({ onSuccess }: { onSuccess?: () => void }) {
       formData.append("content", content.trim());
       if (file) formData.append("media", file);
 
-      const res = await axiosInstance.post("/api/posts/create", formData, {
+      const res = await axiosInstance.post<{
+        success: boolean;
+      }>("/api/posts/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

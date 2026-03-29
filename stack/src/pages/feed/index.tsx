@@ -10,6 +10,7 @@ import axiosInstance from "../../lib/axiosinstance";
 import { useAuth } from "../../lib/AuthContext";
 import Link from "next/link";
 import { useTranslationManager } from "../../hooks/useTranslationManager";
+import { ApiResponse } from "../../types/api.types";
 
 interface Comment {
   _id: string;
@@ -30,6 +31,18 @@ interface Post {
   createdAt: string;
 }
 
+interface LikeResponse {
+  likes: string[];
+}
+
+interface CommentResponse {
+  comments: Comment[];
+}
+
+interface ShareResponse {
+  shares: number;
+}
+
 export default function FeedPage() {
   const { user } = useAuth();
   const { t } = useTranslationManager();
@@ -39,7 +52,7 @@ export default function FeedPage() {
 
   const fetchFeed = async () => {
     try {
-      const res = await axiosInstance.get("/api/posts/feed");
+      const res = await axiosInstance.get<ApiResponse<Post[]>>("/api/posts/feed");
       if (res.data.success) setPosts(res.data.data);
     } catch (err) {
       console.error(err);
@@ -55,7 +68,7 @@ export default function FeedPage() {
   const handleLike = async (postId: string) => {
     if (!user) return;
     try {
-      const res = await axiosInstance.post("/api/posts/like", { postId });
+      const res = await axiosInstance.post<ApiResponse<LikeResponse>>("/api/posts/like", { postId });
       if (res.data.success) {
         setPosts((prev) =>
           prev.map((p) => {
@@ -74,7 +87,7 @@ export default function FeedPage() {
     const text = commentTexts[postId]?.trim();
     if (!text) return;
     try {
-      const res = await axiosInstance.post("/api/posts/comment", { postId, text });
+      const res = await axiosInstance.post<ApiResponse<CommentResponse>>("/api/posts/comment", { postId, text });
       if (res.data.success) {
         setPosts((prev) =>
           prev.map((p) => (p._id === postId ? { ...p, comments: res.data.data.comments } : p))
@@ -89,7 +102,7 @@ export default function FeedPage() {
   const handleShare = async (postId: string) => {
     if (!user) return;
     try {
-      const res = await axiosInstance.post("/api/posts/share", { postId });
+      const res = await axiosInstance.post<ApiResponse<ShareResponse>>("/api/posts/share", { postId });
       if (res.data.success) {
         setPosts((prev) =>
           prev.map((p) => (p._id === postId ? { ...p, shares: res.data.data.shares } : p))

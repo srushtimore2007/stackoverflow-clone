@@ -12,6 +12,7 @@ import { Input } from "../../components/ui/input";
 import { useAuth } from "../../lib/AuthContext";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { ApiResponse } from "../../types/api.types";
 
 export default function UsersPage() {
   const { user } = useAuth();
@@ -32,7 +33,7 @@ export default function UsersPage() {
           return;
         }
         
-        const res = await axiosInstance.get("/api/auth/current-user");
+        const res = await axiosInstance.get<ApiResponse<any>>("/api/auth/current-user");
         console.log('Current user fetched:', res.data);
         setCurrentUser(res.data?.data);
       } catch (error: any) {
@@ -53,6 +54,7 @@ export default function UsersPage() {
         // This allows the page to function without user-specific features
       }
     };
+
     fetchCurrentUser();
   }, []);
 
@@ -60,7 +62,7 @@ export default function UsersPage() {
   const fetchUsers = async (query: string = "") => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get(`/api/auth/search?q=${encodeURIComponent(query)}`);
+      const res = await axiosInstance.get<ApiResponse<any[]>>(`/api/auth/search?q=${encodeURIComponent(query)}`);
       setUsers(res.data?.data || []);
     } catch (error: any) {
       console.error("Failed to fetch users:", error);

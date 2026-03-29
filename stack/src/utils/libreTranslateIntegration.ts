@@ -121,6 +121,13 @@ export interface LibreTranslateResponse {
 }
 
 /**
+ * LibreTranslate API response data interface
+ */
+interface LibreTranslateApiResponse {
+  translatedText: string;
+}
+
+/**
  * Main LibreTranslate integration utility
  * 
  * This utility provides:
@@ -233,7 +240,7 @@ export class LibreTranslateIntegration {
 
     try {
       // Call LibreTranslate API
-      const response = await axiosInstance.post('/api/translate', {
+      const response = await axiosInstance.post<LibreTranslateApiResponse>('/api/translate', {
         text: text.trim(),
         sourceLanguage: sourceCode,
         targetLanguage: targetCode

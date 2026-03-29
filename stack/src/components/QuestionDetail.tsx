@@ -20,6 +20,31 @@ import { useRouter } from "next/router";
 import axiosInstance from "../lib/axiosinstance";
 import Mainlayout from "../layout/Mainlayout";
 import { useAuth } from "../lib/AuthContext";
+
+interface Question {
+  _id: string;
+  title: string;
+  body: string;
+  tags: string[];
+  answer: any[];
+  createdAt: string;
+  updatedAt: string;
+  author: {
+    _id: string;
+    username: string;
+    email: string;
+  };
+}
+
+interface VoteResponse {
+  success: boolean;
+  data: Question;
+}
+
+interface QuestionsResponse {
+  success: boolean;
+  data: Question[];
+}
 const questionData = {
   id: 3,
   title: "How can i block user with middleware?",
@@ -260,11 +285,11 @@ const QuestionDetail = ({ questionId }: any) => {
   useEffect(() => {
     const fetchuser = async () => {
       try {
-        const res = await axiosInstance.get("/api/questions/getallquestion");
+        const res = await axiosInstance.get<QuestionsResponse>("/api/questions/getallquestion");
         const matchedquestion = res.data.data.find(
-          (u: any) => u._id === questionId
+          (u: Question) => u._id === questionId
         );
-        setanswer(matchedquestion.answer);
+        setanswer(matchedquestion?.answer);
         setquestion(matchedquestion);
       } catch (error) {
         console.log(error);
@@ -292,7 +317,7 @@ const QuestionDetail = ({ questionId }: any) => {
       return
     }
     try {
-      const res = await axiosInstance.patch(`/api/questions/vote/${question._id}`, {
+      const res = await axiosInstance.patch<{data: any}>(`/api/questions/vote/${question._id}`, {
         value: vote,
         userid: user?._id,
       });
@@ -317,7 +342,11 @@ const QuestionDetail = ({ questionId }: any) => {
     if (!newanswer.trim()) return;
     setisSubmitting(true);
     try {
-      const res = await axiosInstance.post(
+      const res = await axiosInstance.post<{
+        success: boolean;
+        data: any;
+        message?: string;
+      }>(
         `/api/answer/postanswer/${question?._id}`,
         {
           noofanswer: question.noofanswer,
@@ -349,7 +378,7 @@ const QuestionDetail = ({ questionId }: any) => {
     if (!window.confirm("Are you sure you want to delete this question?"))
       return;
     try {
-      const res = await axiosInstance.delete(
+      const res = await axiosInstance.delete<{ message: string }>(
         `/api/questions/delete/${question._id}`
       );
       if (res.data.message) {
@@ -370,12 +399,15 @@ const QuestionDetail = ({ questionId }: any) => {
     if (!window.confirm("Are you sure you want to delete this answer?"))
       return;
     try {
-      const res = await axiosInstance.delete(`/api/answer/delete/${question._id}`, {
-        data: {
-          noofanswer: question.noofanswer,
-          answerid: id,
-        },
-      });
+      const res = await axiosInstance.delete<{data: any}>(
+        `/api/answer/delete/${question._id}`,
+        {
+          data: {
+            noofanswer: question.noofanswer,
+            answerid: id,
+          },
+        } as any
+      );
       if (res.data.data) {
         setquestion(res.data.data);
         toast.success("deleted successfully");
@@ -394,7 +426,7 @@ const QuestionDetail = ({ questionId }: any) => {
       return;
     }
     try {
-      const res = await axiosInstance.patch(
+      const res = await axiosInstance.patch<VoteResponse>(
         `/api/answer/vote/${question._id}/${answerId}`,
         { value: vote }
       );

@@ -31,6 +31,18 @@ export interface TranslationResult {
   error?: string;
 }
 
+// API response interfaces
+interface TranslateApiResponse {
+  translatedText: string;
+  success: boolean;
+  method: string;
+  error?: string;
+}
+
+interface HealthCheckResponse {
+  libreTranslateAvailable: boolean;
+}
+
 // Enhanced translation manager class
 export class EnhancedTranslationManager {
   private baseUrl: string;
@@ -100,7 +112,7 @@ export class EnhancedTranslationManager {
    */
   private async checkLibreTranslateHealth(): Promise<void> {
     try {
-      const response = await axios.get(`${this.baseUrl}/api/translate/health`, {
+      const response = await axios.get<HealthCheckResponse>(`${this.baseUrl}/api/translate/health`, {
         timeout: 3000
       });
       
@@ -171,7 +183,7 @@ export class EnhancedTranslationManager {
     }
 
     try {
-      const response = await axios.post(`${this.baseUrl}/api/translate`, {
+      const response = await axios.post<TranslateApiResponse>(`${this.baseUrl}/api/translate`, {
         text,
         sourceLanguage,
         targetLanguage: target
@@ -182,12 +194,13 @@ export class EnhancedTranslationManager {
         }
       });
 
+      const data = response.data;
       const result: TranslationResult = {
-        translatedText: response.data.translatedText,
-        success: response.data.success,
-        method: response.data.method || 'unknown',
+        translatedText: data.translatedText,
+        success: data.success,
+        method: data.method || 'unknown',
         responseTime: Date.now() - startTime,
-        error: response.data.error
+        error: data.error
       };
 
       // Cache the result

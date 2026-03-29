@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslationManager } from "../hooks/useTranslationManager";
+import { ApiResponse } from "../types/api.types";
 
 const questions = [
   {
@@ -78,7 +79,7 @@ export default function Home() {
   useEffect(() => {
     const fetchquestion = async () => {
       try {
-        const res = await axiosInstance.get("/api/questions/getallquestion");
+        const res = await axiosInstance.get<ApiResponse<any>>("/api/questions/getallquestion");
         setquestion(res.data.data);
       } catch (error) {
         console.log(error);

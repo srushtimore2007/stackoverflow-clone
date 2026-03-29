@@ -8,6 +8,7 @@ import axiosInstance from "../../lib/axiosinstance";
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import { useAuth } from "../../lib/AuthContext";
 import { useTranslation } from "react-i18next";
+import { ApiResponse } from "../../types/api.types";
 
 export default function FriendsPage() {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ export default function FriendsPage() {
     }
     const fetchFriends = async () => {
       try {
-        const res = await axiosInstance.get("/api/auth/friends");
+        const res = await axiosInstance.get<ApiResponse<any[]>>("/api/auth/friends");
         setFriends(res.data?.data || []);
       } catch (error) {
         console.error("Failed to fetch friends:", error);

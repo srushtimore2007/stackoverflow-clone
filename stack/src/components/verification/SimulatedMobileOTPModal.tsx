@@ -20,6 +20,16 @@ interface SimulatedMobileOTPModalProps {
   initialPhone?: string | null;
 }
 
+interface OTPSendResponse {
+  success: boolean;
+  message: string;
+}
+
+interface OTPVerifyResponse {
+  success: boolean;
+  message: string;
+}
+
 export function SimulatedMobileOTPModal({
   open,
   onOpenChange,
@@ -53,7 +63,7 @@ export function SimulatedMobileOTPModal({
     setSuccessMsg(null);
     setLoading(true);
     try {
-      const response = await axiosInstance.post('/api/mobile-otp/send', { mobile: phone.trim() });
+      const response = await axiosInstance.post<OTPSendResponse>('/api/mobile-otp/send', { mobile: phone.trim() });
       if (response.data.success) {
         setStep('otp');
         setSuccessMsg(response.data.message || 'OTP Sent successfully');
@@ -76,7 +86,7 @@ export function SimulatedMobileOTPModal({
     setSuccessMsg(null);
     setLoading(true);
     try {
-      const response = await axiosInstance.post('/api/mobile-otp/verify', {
+      const response = await axiosInstance.post<OTPVerifyResponse>('/api/mobile-otp/verify', {
         mobile: phone.trim(),
         otp: otp
       });

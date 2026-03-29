@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { toast } from "react-toastify";
 import { useTranslationManager } from "../../hooks/useTranslationManager";
+import { ApiResponse } from "../../types/api.types";
 
 interface LoginHistoryItem {
   _id: string;
@@ -71,7 +72,7 @@ const LoginHistoryPage = () => {
 
     const fetchLoginHistory = async () => {
       try {
-        const res = await axiosInstance.get("/api/login-history");
+        const res = await axiosInstance.get<ApiResponse<LoginHistoryItem[]>>("/api/login-history");
         if (res.data.success && isMounted) {
           setLoginHistory(res.data.data || []);
         }

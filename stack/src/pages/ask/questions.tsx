@@ -15,6 +15,19 @@ import { useSubscription } from "../../hooks/useSubscription";
 import SubscriptionStatus from "../../components/SubscriptionStatus";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import { ApiResponse } from "../../types/api.types";
+
+interface QuestionPostData {
+  questiontitle: string;
+  questionbody: string;
+  questiontags: string[];
+  userposted: string;
+  userid: string;
+}
+
+interface QuestionPostRequest {
+  postquestiondata: QuestionPostData;
+}
 
 
 
@@ -66,15 +79,18 @@ const index = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await axiosInstance.post("/api/questions/ask", {
-        postquestiondata: {
-          questiontitle: formData.title,
-          questionbody: formData.body,
-          questiontags: formData.tags,
-          userposted: user.name,
-          userid: user?._id,
-        },
-      });
+      const res = await axiosInstance.post<ApiResponse<QuestionPostRequest>>(
+        "/api/questions/ask",
+        {
+          postquestiondata: {
+            questiontitle: formData.title,
+            questionbody: formData.body,
+            questiontags: formData.tags,
+            userposted: user.name,
+            userid: user?._id,
+          },
+        }
+      );
       
       if (res.data.success) {
         toast.success(t('askQuestion.questionPosted'));
