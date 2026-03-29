@@ -31,6 +31,7 @@ const checkPaymentTime = (req, res, next) => {
       console.error('❌ Payment blocked - outside time window:', {
         istHour,
         istMinute,
+        istTime: istTime.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }),
         allowedWindow: '10:00 AM - 11:00 AM IST'
       });
       

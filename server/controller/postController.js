@@ -88,13 +88,27 @@ export const createPost = async (req, res) => {
     let mediaUrl = null;
     let mediaType = null;
 
-    if (req.file) {
-      const baseUrl = process.env.BASE_URL || "http://localhost:5000";
-      mediaUrl = `${baseUrl}/uploads/${req.file.filename}`;
-      const mime = req.file.mimetype;
-      mediaType = ALLOWED_IMAGE_TYPES.includes(mime) ? "image" : "video";
-    }
+    // if (req.file) {
+    //   const baseUrl = process.env.BASE_URL;
+    //   // || "http://localhost:5000";
+    //   mediaUrl = `${baseUrl}/uploads/${req.file.filename}`;
+    //   const mime = req.file.mimetype;
+    //   mediaType = ALLOWED_IMAGE_TYPES.includes(mime) ? "image" : "video";
+    // }
 
+    if (req.file) {
+  const baseUrl = process.env.BASE_URL;
+  if (!baseUrl) {
+    console.error("BASE_URL not set. Cannot generate media URL.");
+    return res
+      .status(500)
+      .json({ success: false, message: "Server misconfiguration" });
+  }
+
+  mediaUrl = `${baseUrl}/uploads/${req.file.filename}`;
+  const mime = req.file.mimetype;
+  mediaType = ALLOWED_IMAGE_TYPES.includes(mime) ? "image" : "video";
+  }
     const newPost = await Post.create({
       userId,
       content: content.trim(),

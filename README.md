@@ -25,7 +25,7 @@ CodeQuest is a comprehensive Q&A platform that replicates Stack Overflow's core 
 ### Authentication & Security
 - 🔐 **Secure Auth**: JWT-based authentication with bcrypt password hashing
 - 📱 **SMS OTP**: Vonage integration for mobile verification
-- 📧 **Email OTP**: SendGrid/Nodemailer for email verification
+- 📧 **Email OTP**: Brevo integration for email verification
 - 🕐 **Login History**: Track user login sessions with device detection
 - 🛡️ **Security**: Rate limiting and input validation
 
@@ -65,7 +65,7 @@ CodeQuest is a comprehensive Q&A platform that replicates Stack Overflow's core 
 ### Payment & Communication
 - **Payment**: Razorpay (INR)
 - **SMS**: Vonage/Nexmo
-- **Email**: SendGrid/Nodemailer/Resend
+- **Email**: Brevo (primary), SendGrid (alternative)
 - **Cloud**: AWS S3 for file storage
 
 ### Development Tools
@@ -110,31 +110,45 @@ Create environment file:
 cp .env.example .env
 ```
 
-Configure environment variables (see [Environment Variables](#environment-variables) section):
+Configure environment variables:
 
 ```bash
-# Database
+# Database Configuration
 MONGODB_URL=mongodb://localhost:27017/stackoverflow-clone
 PORT=5000
 
-# JWT
+# JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key-here
 JWT_EXPIRES_IN=30d
 
-# Translation
+# LibreTranslate Configuration
 LIBRETRANSLATE_URL=http://localhost:5001
+LIBRETRANSLATE_API_KEY=
+
+# Email Configuration (Brevo - PRIMARY)
+BREVO_API_KEY=your_brevo_api_key_here
+BREVO_SENDER_EMAIL=your_verified_brevo_sender_email
+
+# Vonage Configuration (for SMS OTP)
+VONAGE_API_KEY=your-vonage-api-key-here
+VONAGE_API_SECRET=your-vonage-api-secret-here
+VONAGE_FROM_NUMBER=StackOverflow
+
+# Google Cloud Translation API (optional)
 GOOGLE_TRANSLATE_API_KEY=your-google-translate-api-key
 
-# Payment
+# AWS Configuration (for file uploads)
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET=your-s3-bucket-name
+
+# Razorpay Configuration (for payments)
 RAZORPAY_KEY_ID=your-razorpay-key-id
 RAZORPAY_KEY_SECRET=your-razorpay-key-secret
 
-# SMS (Vonage)
-VONAGE_API_KEY=your-vonage-api-key-here
-VONAGE_API_SECRET=your-vonage-api-secret-here
-
-# Email (SendGrid)
-SENDGRID_API_KEY=your-sendgrid-api-key
+# Development/Production
+NODE_ENV=development
 ```
 
 Start the backend server:
@@ -168,23 +182,26 @@ cp .env.example .env.local
 Configure frontend environment variables:
 
 ```bash
-# Vonage/Nexmo SMS Configuration
+# Vonage/Nexmo SMS Configuration (Required for OTP)
 VONAGE_API_KEY=your-vonage-api-key-here
 VONAGE_API_SECRET=your-vonage-api-secret-here
 VONAGE_BRAND_NAME=CodeQuest
 
-# Email Configuration
+# Email Configuration (Optional, for email OTP)
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password-here
 EMAIL_SERVICE=gmail
 
 # Next.js Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:5000
 NODE_ENV=development
 
-# LibreTranslate API Configuration
+# LibreTranslate API Configuration (Dynamic Translation)
 NEXT_PUBLIC_LIBRETRANSLATE_URL=https://libretranslate.de/translate
 NEXT_PUBLIC_ENABLE_DYNAMIC_TRANSLATION=true
+NEXT_PUBLIC_SHOW_TRANSLATION_INDICATORS=false
+NEXT_PUBLIC_TRANSLATION_TIMEOUT=10000
 NEXT_PUBLIC_SUPPORTED_LANGUAGES=en,es,hi,pt,zh,fr
 ```
 
@@ -218,6 +235,7 @@ MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/stackoverflo
 - `POST /forgot-password` - Password reset
 - `GET /current-user` - Get current user profile
 - `GET /friends` - Get user friends list
+- `GET /search` - Search users
 
 ### Questions (`/api/questions`)
 - `GET /` - Get all questions
@@ -246,7 +264,7 @@ MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/stackoverflo
 ### OTP (`/api/otp`)
 - `POST /send` - Send OTP (SMS/Email)
 - `POST /verify` - Verify OTP
-- `POST /send-language-otp` - Send language change OTP
+- `GET /requirements/:language` - Get language requirements
 
 ### Language (`/api/language`)
 - `POST /change` - Change user language
@@ -258,7 +276,100 @@ MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/stackoverflo
 
 ### Login History (`/api/login-history`)
 - `GET /user/:userId` - Get user login history
-- `POST /` - Record login attempt
+
+## 🧪 Testing Endpoints
+
+### Authentication Testing
+
+#### Signup
+```bash
+curl -X POST http://localhost:5000/api/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123"
+  }'
+```
+
+#### Login
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "password123"
+  }'
+```
+
+#### Send Email OTP
+```bash
+curl -X POST http://localhost:5000/api/auth/send-email-otp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com"
+  }'
+```
+
+#### Verify Login OTP
+```bash
+curl -X POST http://localhost:5000/api/auth/verify-login-otp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "otp": "123456"
+  }'
+```
+
+#### Forgot Password
+```bash
+curl -X POST http://localhost:5000/api/auth/forgot-password \
+  -H "Content-Type: application/json" \
+  -d '{
+    "identifier": "test@example.com"
+  }'
+```
+
+### OTP Testing
+
+#### Send OTP
+```bash
+curl -X POST http://localhost:5000/api/otp/send \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "email",
+    "value": "test@example.com"
+  }'
+```
+
+#### Verify OTP
+```bash
+curl -X POST http://localhost:5000/api/otp/verify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "value": "test@example.com",
+    "otp": "123456"
+  }'
+```
+
+### Subscription Testing
+
+#### Get Subscription Status
+```bash
+curl -X GET http://localhost:5000/api/subscription/status \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### Create Order (only during 10-11 AM IST)
+```bash
+curl -X POST http://localhost:5000/api/subscription/create-order \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "plan": "BRONZE",
+    "amount": 10000
+  }'
+```
 
 ## 💳 Subscription Plans
 
@@ -309,138 +420,49 @@ MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/stackoverflo
 - **Fallback**: Google Cloud Translation API
 - **Configuration**: Configurable via environment variables
 
-## 📁 Project Structure
+## � Third-Party Integrations
 
-```
-stackoverflow-clone/
-├── server/                          # Backend application
-│   ├── api/                         # API route handlers
-│   │   ├── auth/                    # Authentication endpoints
-│   │   └── otp/                     # OTP endpoints
-│   ├── config/                      # Configuration files
-│   │   ├── multer.js               # File upload config
-│   │   └── plans.js                # Subscription plans
-│   ├── controller/                  # Business logic controllers
-│   ├── lib/                         # Utility libraries
-│   │   ├── db/                     # Database utilities
-│   │   ├── email/                  # Email services
-│   │   └── otp/                    # OTP services
-│   ├── middleware/                  # Express middleware
-│   ├── models/                      # Mongoose models
-│   ├── routes/                      # API routes
-│   ├── uploads/                     # File upload directory
-│   ├── .env.example                # Environment variables template
-│   ├── index.js                    # Server entry point
-│   └── package.json                # Backend dependencies
-│
-├── stack/                           # Frontend application
-│   ├── public/                      # Static assets
-│   │   └── locales/                # Translation files
-│   │       ├── en.json             # English translations
-│   │       ├── hi.json             # Hindi translations
-│   │       ├── es.json             # Spanish translations
-│   │       ├── pt.json             # Portuguese translations
-│   │       ├── zh.json             # Chinese translations
-│   │       └── fr.json             # French translations
-│   ├── src/
-│   │   ├── components/             # React components
-│   │   │   ├── ui/                 # shadcn/ui components
-│   │   │   ├── verification/       # OTP verification components
-│   │   │   ├── AskQuestion.tsx     # Question form
-│   │   │   ├── LanguageSwitcher.tsx # Language switcher
-│   │   │   ├── Navbar.tsx          # Navigation bar
-│   │   │   ├── RazorpayPayment.tsx # Payment component
-│   │   │   ├── Sidebar.tsx         # Sidebar navigation
-│   │   │   └── SubscriptionPlans.tsx # Subscription plans
-│   │   ├── contexts/               # React contexts
-│   │   │   ├── TranslationContext.tsx # Translation context
-│   │   │   └── language-context.tsx  # Language context
-│   │   ├── hooks/                  # Custom React hooks
-│   │   ├── lib/                    # Utility libraries
-│   │   │   ├── axiosinstance.ts    # HTTP client
-│   │   │   └── AuthContext.tsx     # Authentication context
-│   │   ├── pages/                  # Next.js pages
-│   │   │   ├── auth/               # Authentication pages
-│   │   │   ├── ask/                # Question pages
-│   │   │   ├── feed/               # Main feed
-│   │   │   ├── subscription/       # Subscription pages
-│   │   │   └── users/              # User pages
-│   │   └── layout/                 # Layout components
-│   ├── .env.example               # Frontend environment template
-│   ├── next.config.js             # Next.js configuration
-│   ├── tailwind.config.js         # Tailwind CSS configuration
-│   └── package.json               # Frontend dependencies
-│
-├── .gitignore                      # Git ignore file
-├── README.md                       # This file
-└── Various documentation files     # Implementation guides
-```
+### Brevo (Email Service)
+- **Purpose**: Primary email service for OTP and notifications
+- **Setup**: 
+  1. Create account at [Brevo](https://www.brevo.com/)
+  2. Get API key from dashboard
+  3. Verify sender email
+  4. Configure `BREVO_API_KEY` and `BREVO_SENDER_EMAIL`
 
-## 🔧 Environment Variables
+### Vonage (SMS Service)
+- **Purpose**: SMS OTP verification
+- **Setup**:
+  1. Create account at [Vonage](https://www.vonage.com/)
+  2. Get API key and secret
+  3. Configure `VONAGE_API_KEY` and `VONAGE_API_SECRET`
 
-### Backend (.env)
-```bash
-# Database
-MONGODB_URL=mongodb://localhost:27017/stackoverflow-clone
-PORT=5000
+### Razorpay (Payment Gateway)
+- **Purpose**: Payment processing for subscriptions
+- **Setup**:
+  1. Create account at [Razorpay](https://razorpay.com/)
+  2. Get key ID and secret
+  3. Configure `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`
 
-# Authentication
-JWT_SECRET=your-super-secret-jwt-key-here
-JWT_EXPIRES_IN=30d
+### MongoDB (Database)
+- **Purpose**: Primary database
+- **Setup**:
+  1. **Local**: Install MongoDB Community Server
+  2. **Cloud**: Use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+  3. Configure `MONGODB_URL`
 
-# Translation
-LIBRETRANSLATE_URL=http://localhost:5001
-LIBRETRANSLATE_API_KEY=
-GOOGLE_TRANSLATE_API_KEY=your-google-translate-api-key
+### LibreTranslate (Translation)
+- **Purpose**: Dynamic content translation
+- **Setup**:
+  1. **Self-hosted**: Deploy [LibreTranslate](https://github.com/LibreTranslate/LibreTranslate)
+  2. **Public**: Use https://libretranslate.de/
+  3. Configure `LIBRETRANSLATE_URL`
 
-# SMS (Vonage)
-VONAGE_API_KEY=your-vonage-api-key-here
-VONAGE_API_SECRET=your-vonage-api-secret-here
-VONAGE_FROM_NUMBER=StackOverflow
-
-# Email Services
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password-here
-SENDGRID_API_KEY=your-sendgrid-api-key
-RESEND_API_KEY=your-resend-api-key
-
-# Payment (Razorpay)
-RAZORPAY_KEY_ID=your-razorpay-key-id
-RAZORPAY_KEY_SECRET=your-razorpay-key-secret
-
-# AWS (File Upload)
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_REGION=us-east-1
-AWS_S3_BUCKET=your-s3-bucket-name
-
-# Development
-NODE_ENV=development
-```
-
-### Frontend (.env.local)
-```bash
-# Vonage SMS
-VONAGE_API_KEY=your-vonage-api-key-here
-VONAGE_API_SECRET=your-vonage-api-secret-here
-VONAGE_BRAND_NAME=CodeQuest
-
-# Email
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password-here
-EMAIL_SERVICE=gmail
-
-# Application
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NODE_ENV=development
-
-# Translation
-NEXT_PUBLIC_LIBRETRANSLATE_URL=https://libretranslate.de/translate
-NEXT_PUBLIC_ENABLE_DYNAMIC_TRANSLATION=true
-NEXT_PUBLIC_SHOW_TRANSLATION_INDICATORS=false
-NEXT_PUBLIC_TRANSLATION_TIMEOUT=10000
-NEXT_PUBLIC_SUPPORTED_LANGUAGES=en,es,hi,pt,zh,fr
-```
+### Firebase (Optional)
+- **Purpose**: Additional authentication and storage
+- **Setup**:
+  1. Create project at [Firebase Console](https://console.firebase.google.com/)
+  2. Configure Firebase credentials in frontend
 
 ## 🐛 Troubleshooting
 
@@ -469,12 +491,12 @@ Error: LibreTranslate connection failed
 
 #### 4. OTP Not Sending
 ```bash
-Error: Vonage API failed
+Error: Brevo API failed
 ```
 **Solution**:
-- Verify Vonage API credentials
-- Check account balance
-- Ensure phone number format is correct
+- Verify Brevo API credentials
+- Check sender email verification
+- Ensure email format is correct
 
 #### 5. Payment Verification Failed
 ```bash
@@ -482,8 +504,8 @@ Error: Razorpay signature verification failed
 ```
 **Solution**:
 - Check Razorpay key ID and secret
-- Verify webhook configuration
-- Ensure payment is completed before verification
+- Verify payment is completed during 10-11 AM IST
+- Ensure webhook configuration
 
 #### 6. Frontend Build Errors
 ```bash
