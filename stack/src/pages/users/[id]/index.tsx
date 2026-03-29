@@ -15,13 +15,11 @@ import { Textarea } from "../../../components/ui/textarea";
 import Mainlayout from "../../../layout/Mainlayout";
 import { useAuth } from "../../../lib/AuthContext";
 import axiosInstance from "../../../lib/axiosinstance";
-import { Award, Calendar, Coins, Edit, Plus, Search, Send, X, Phone } from "lucide-react";
+import { Award, Calendar, Coins, Edit, Plus, Search, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "@/firebase";
 
 const index = () => {
   const { user, rewards } = useAuth();
@@ -54,15 +52,6 @@ const index = () => {
 });
   const [newTag, setNewTag] = useState("");
 
-  const [phoneInput, setPhoneInput] = useState("");
-  const [otpInput, setOtpInput] = useState("");
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
-  const [phoneVerified, setPhoneVerified] = useState(false);
-  const confirmationResultRef = useRef<any | null>(null);
-
   const [isFriend, setIsFriend] = useState(false);
   const [addingFriend, setAddingFriend] = useState(false);
 
@@ -88,7 +77,7 @@ const index = () => {
     fetchuser();
   }, [id]);
 
-  // ========================= UPDATE FORM & PHONE ON USER FETCH =========================
+  // ========================= UPDATE FORM ON USER FETCH =========================
   useEffect(() => {
   if (users) {
     setEditForm({
@@ -132,20 +121,6 @@ const index = () => {
     fetchRewards();
   }, [id, user?._id]);
 
-  // ========================= RESEND OTP TIMER =========================
-  useEffect(() => {
-    if (!otpSent || resendCooldown <= 0) return;
-    const timer = setInterval(() => {
-      setResendCooldown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [otpSent, resendCooldown]);
 
   // ========================= FRIEND STATUS =========================
   useEffect(() => {
@@ -240,92 +215,6 @@ const index = () => {
   const handleRemoveTag = (tagToRemove: string) => {
     setEditForm({ ...editForm, tags: editForm.tags.filter((tag) => tag !== tagToRemove) });
   };
-
-  const setupRecaptchaVerifier = () => {
-    if (typeof window === "undefined") return null;
-    const w = window as any;
-    if (!w.recaptchaVerifier) {
-      w.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "invisible" });
-    }
-    return w.recaptchaVerifier;
-  };
-
-  const handleSendPhoneOtp = async () => {
-    if (!isOwnProfile) return;
-    const phone = phoneInput.trim();
-    if (!phone) {
-      toast.error("Please enter your phone number");
-      return;
-    }
-    try {
-      setIsSendingOtp(true);
-      const appVerifier = setupRecaptchaVerifier();
-      if (!appVerifier) {
-        toast.error("reCAPTCHA is not ready. Please refresh the page.");
-        return;
-      }
-      const confirmationResult = await signInWithPhoneNumber(auth, phone, appVerifier);
-      confirmationResultRef.current = confirmationResult;
-      setOtpSent(true);
-      setResendCooldown(30);
-      toast.success("OTP sent to your phone");
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error?.message || "Failed to send OTP");
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-const handleVerifyPhoneOtp = async () => {
-  if (!isOwnProfile) return;
-  if (!otpInput || otpInput.length !== 6) {
-    toast.error("Please enter a valid 6-digit OTP");
-    return;
-  }
-  if (!confirmationResultRef.current) {
-    toast.error("No OTP session found. Please request a new OTP.");
-    return;
-  }
-
-  try {
-    setIsVerifyingOtp(true);
-    await confirmationResultRef.current.confirm(otpInput);
-
-    // THIS LINE: update phone number in backend
-    const res = await axiosInstance.post("/api/auth/update-phone", {
-      phoneNumber: phoneInput.trim()
-    });
-
-    if (res.data?.success) {
-      setPhoneVerified(true);
-      setusers((prev: any) =>
-        prev
-          ? {
-              ...prev,
-              phoneNumber: res.data.data?.phoneNumber ?? phoneInput.trim(),
-              isPhoneVerified: true,
-            }
-          : prev
-      );
-      toast.success("Phone number verified successfully");
-    } else {
-      toast.error(res.data?.message || "Failed to update phone number");
-    }
-  } catch (error: any) {
-    console.error("[handleVerifyPhoneOtp]", error);
-    const code = error?.code || "";
-    const message =
-      code === "auth/invalid-verification-code"
-        ? "Invalid OTP. Please try again."
-        : code === "auth/code-expired"
-        ? "OTP has expired. Please request a new one."
-        : error?.message || "OTP verification failed";
-    toast.error(message);
-  } finally {
-    setIsVerifyingOtp(false);
-  }
-};
 
 
   const handleTransferPoints = async () => {
@@ -761,85 +650,6 @@ const handleVerifyPhoneOtp = async () => {
             </Card>
           </div>
           <div className="space-y-6">
-            {isOwnProfile && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Phone className="w-5 h-5 text-green-600" />
-                    <span>Phone Number Verification</span>
-                    {phoneVerified && (
-                      <Badge className="bg-green-100 text-green-800 border border-green-300">
-                        Verified
-                      </Badge>
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="space-y-1">
-                    <Label htmlFor="phoneNumber">Phone Number</Label>
-                    <Input
-                      id="phoneNumber"
-                      value={phoneInput}
-                      onChange={(e) => setPhoneInput(e.target.value)}
-                      placeholder="+91XXXXXXXXXX"
-                      disabled={isSendingOtp || isVerifyingOtp}
-                    />
-                    <p className="text-xs text-gray-500">
-                      Use international format (e.g., +91XXXXXXXXXX). OTP will be sent via SMS.
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      onClick={handleSendPhoneOtp}
-                      disabled={isSendingOtp || (!phoneInput && !phoneInput.trim())}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      {isSendingOtp ? "Sending OTP..." : otpSent ? "Resend OTP" : "Send OTP"}
-                    </Button>
-                    {otpSent && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleSendPhoneOtp}
-                        disabled={isSendingOtp || resendCooldown > 0}
-                      >
-                        {resendCooldown > 0
-                          ? `Resend in ${resendCooldown}s`
-                          : "Resend OTP"}
-                      </Button>
-                    )}
-                  </div>
-
-                  {otpSent && (
-                    <div className="space-y-2 pt-2 border-t">
-                      <Label htmlFor="otp">Enter OTP</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="otp"
-                          value={otpInput}
-                          onChange={(e) =>
-                            setOtpInput(e.target.value.replace(/\D/g, "").slice(0, 6))
-                          }
-                          placeholder="000000"
-                          maxLength={6}
-                          disabled={isVerifyingOtp}
-                        />
-                        <Button
-                          type="button"
-                          onClick={handleVerifyPhoneOtp}
-                          disabled={isVerifyingOtp || otpInput.length !== 6}
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          {isVerifyingOtp ? "Verifying..." : "Verify"}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
             {users.friends && users.friends.length > 0 && (
               <Card>
                 <CardHeader>
